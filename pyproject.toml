@@ -1,0 +1,23 @@
+[tool.poetry]
+name = "zephir-api"
+version = "0.1.0"
+description = "Zephir Item API"
+authors = []
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+flask = "^3.0"
+flask_sqlalchemy = "^3.0"
+pyyaml = "^6.0.1"
+mysqlclient = "^2.2.4"
+mysql-connector-python = "^8.4.0"
+markdown = "^3.6"
+markupsafe = "^2.1.5"
+
+[tool.poetry.dev-dependencies]
+pytest = "^6.2"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
