@@ -20,12 +20,17 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['APP_ROOT'] = os.path.abspath(os.path.dirname(__file__))
 
 # Load database configuration
-db_config_path = os.path.join(app.config['APP_ROOT'], 'config', 'database.yml')
-with open(db_config_path, 'r') as file:
-    db_config = yaml.safe_load(file)['development']
+# db_config_path = os.path.join(app.config['APP_ROOT'], 'config', 'database.yml')
+# with open(db_config_path, 'r') as file:
+#     db_config = yaml.safe_load(file)['development']
+
+USERNAME = os.getenv('USERNAME')
+PASSWORD = os.getenv('PASSWORD')
+HOST = os.getenv('HOST')
+DATABASE = os.getenv('DATABASE')
 
 # Construct the database URI
-db_uri = f"mysql+mysqlconnector://{db_config['username']}:{db_config['password']}@{db_config['host']}/{db_config['database']}?charset=utf8mb4"
+db_uri = f"mysql+mysqlconnector://{USERNAME}:{PASSWORD}@{HOST}/{DATABASE}?charset=utf8mb4"
 app.config['SQLALCHEMY_DATABASE_URI'] = db_uri
 
 db = SQLAlchemy(app)
@@ -132,4 +137,4 @@ def validate_htid(htid):
     
     
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, host="0.0.0.0")
