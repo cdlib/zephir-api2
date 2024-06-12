@@ -2,6 +2,7 @@ import logging
 import re
 from flask import Flask, request, jsonify, redirect, url_for, make_response
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy.orm.exc import NoResultFound
 import markdown
 from markupsafe import Markup
 import yaml
@@ -91,9 +92,9 @@ def item(htid):
     app.logger.debug(f"HTID: {htid}")
     item = ZephirFiledata.query.filter_by(htid=htid).first()
     if item is None:
-        raise Exception('Not Found')
+        raise NoResultFound(f"No results found for HTID: {htid}")
     
-    app.logger.debug(f"desired content type: {request.desired_content_type}")
+    app.logger.debug(f'desired content type: {request.desired_content_type}')
 
     if request.desired_content_type == 'application/json':
         content = make_response(item.metadata_json)
@@ -103,20 +104,19 @@ def item(htid):
         content.headers['Content-Type'] = 'text/xml'
     return content
 
+@app.errorhandler(Exception)
+def handle_exception(error):
+    print(error)
+    if isinstance(error, NoResultFound):
+        return render_basic_response(404, str(error))
+    elif isinstance(error, UnacceptableParameterException):
+        return render_basic_response(422, str(error))
+    else:
+        return render_basic_response(500, 'Failure')
 
-# @app.errorhandler(Exception)
-# def handle_exception(error):
-#     print(error)
-#     if isinstance(error, KeyError):
-#         return render_basic_response(404, 'Not Found')
-#     elif isinstance(error, ValueError):
-#         return render_basic_response(422, 'Unacceptable parameters')
-#     else:
-#         return render_basic_response(500, 'Failure')
-
-# @app.errorhandler(404)
-# def handle_404(error):
-#     return render_basic_response(400, 'Bad Request')
+@app.errorhandler(404)
+def handle_404(error):
+    return render_basic_response(400, 'Bad Request')
 
 def sub_url(text):
     return text.replace('http://localhost/', request.url_root)
@@ -130,10 +130,15 @@ def render_basic_response(status_code, message):
     return response, status_code
 
 HTID_REGEX = re.compile(r'^([\w.]{3,40})$')
+
+class UnacceptableParameterException(Exception):
+    def __init__(self, msg='Unacceptable parameters', *args, **kwargs):
+        super().__init__(msg, *args, **kwargs)
+
 def validate_htid(htid):
     match = re.match(HTID_REGEX, htid)
     if not match:
-        raise Exception('Unacceptable parameters')
+        raise UnacceptableParameterException()
     return match.group(1)
     
     
