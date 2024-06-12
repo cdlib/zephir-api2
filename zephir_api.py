@@ -6,6 +6,10 @@ import markdown
 from markupsafe import Markup
 import yaml
 import os
+from dotenv import load_dotenv
+
+# Load environment variables if not passed by Docker
+load_dotenv()
 
 app = Flask(__name__)
 
@@ -19,18 +23,17 @@ app.logger.debug(f"starting logger with level {app.logger.level}")
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['APP_ROOT'] = os.path.abspath(os.path.dirname(__file__))
 
-# Load database configuration
-# db_config_path = os.path.join(app.config['APP_ROOT'], 'config', 'database.yml')
-# with open(db_config_path, 'r') as file:
-#     db_config = yaml.safe_load(file)['development']
 
-USERNAME = os.getenv('USERNAME')
-PASSWORD = os.getenv('PASSWORD')
-HOST = os.getenv('HOST')
-DATABASE = os.getenv('DATABASE')
+WEB_PORT = os.getenv('WEB_PORT')
+
+DB_USERNAME = os.getenv('DB_USERNAME')
+DB_PASSWORD = os.getenv('DB_PASSWORD')
+DB_HOST = os.getenv('DB_HOST')
+DB_DATABASE = os.getenv('DB_DATABASE')
+
 
 # Construct the database URI
-db_uri = f"mysql+mysqlconnector://{USERNAME}:{PASSWORD}@{HOST}/{DATABASE}?charset=utf8mb4"
+db_uri = f"mysql+mysqlconnector://{DB_USERNAME}:{DB_PASSWORD}@{DB_HOST}/{DB_DATABASE}?charset=utf8mb4"
 app.config['SQLALCHEMY_DATABASE_URI'] = db_uri
 
 db = SQLAlchemy(app)
@@ -48,7 +51,8 @@ re.compile(r'^([a-zA-Z0-9_]{3,40})(?:\.json|\.xml)?$')
 @app.before_request
 def handle_content_negotiation():
     app.logger.debug(f"Path: {request.path}")
-    if request.path.endswith('.json'):
+    app.logger.debug(f"Accept: {request.accept_mimetypes}")
+    if request.path.endswith('.json') or 'application/json' in request.accept_mimetypes.values():
         request.desired_content_type = 'application/json'
     else: 
         request.desired_content_type = 'text/xml'
@@ -89,11 +93,8 @@ def item(htid):
     if item is None:
         raise Exception('Not Found')
     
-    # Determine the best match based on client's Accept header
-    supported_types = ['application/json', 'text/xml']
-    best = request.accept_mimetypes.best_match(supported_types)
+    app.logger.debug(f"desired content type: {request.desired_content_type}")
 
-    app.logger.debug(f"Request: {best}")
     if request.desired_content_type == 'application/json':
         content = make_response(item.metadata_json)
         content.headers['Content-Type'] = 'application/json'
@@ -137,4 +138,4 @@ def validate_htid(htid):
     
     
 if __name__ == '__main__':
-    app.run(debug=True, host="0.0.0.0")
+    app.run(debug=True, host="0.0.0.0", port=WEB_PORT)
