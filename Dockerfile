@@ -14,5 +14,4 @@ COPY . .
 
 EXPOSE 8000
 
-# Run the application
-CMD ["poetry", "run", "gunicorn", "-b", "0.0.0.0", "zephir_api:app"]
+CMD ["poetry", "run", "gunicorn", "-b", "0.0.0.0", "zephir_api:create_app()"]

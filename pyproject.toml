@@ -16,8 +16,12 @@ markupsafe = "^2.1.5"
 gunicorn = "^22.0.0"
 python-dotenv = "^1.0.1"
 
-[tool.poetry.dev-dependencies]
-pytest = "^6.2"
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.2.2"
+pytest-flask = "^1.3.0"
+
+[tool.poetry.group.dev]
+optional = true
 
 [build-system]
 requires = ["poetry-core"]
