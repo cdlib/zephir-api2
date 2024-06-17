@@ -74,11 +74,3 @@ def test_xml_overrides_json(client):
 
     with pytest.raises(json.JSONDecodeError):
         response_json = json.loads(response.data)
-
-    assert 1 == 0
-    
-
-    
-
-
-
