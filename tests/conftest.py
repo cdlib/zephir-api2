@@ -6,8 +6,6 @@ from flask_sqlalchemy import SQLAlchemy
 import shutil
 from zephir_api import create_app
 
-# os.setenv('SQLALCHEMY_DATABASE_URI', 'sqlite:////Users/lpham-local/Desktop/zephir-api2/zephir-api2/tests/test_zephir_api/db.sqlite')
-
 @pytest.fixture
 def td_tmpdir(request, tmpdir):
     """Copy test data into the temporary directory for tests, if available.

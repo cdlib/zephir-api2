@@ -1,17 +1,61 @@
-FROM public.ecr.aws/docker/library/python:slim
+FROM python:3.12-slim-bullseye as base
+# Allowing the argumenets to be read into the dockerfile. Ex:  .env > compose.yml > Dockerfile
+ARG UID=1000
+ARG GID=1000
 
-# Install poetry
+# Create the user and usergroup
+RUN groupadd -g ${GID} -o app
+RUN useradd -m -d /app -u ${UID} -g ${GID} -o -s /bin/bash app
+
+# Set the working directory to /app
+WORKDIR /app
+
+# Both build and development need poetry, so it is its own step.
+FROM base as poetry
 RUN pip install poetry
 
-# Copy the poetry.lock and pyproject.toml
+# Use this page as a reference for python and poetry environment variables:
+# https://docs.python.org/3/using/cmdline.html#envvar-PYTHONUNBUFFERED Ensure
+# the stdout and stderr streams are sent straight to terminal, then you can see
+# the output of your application
+ENV PYTHONUNBUFFERED=1\
+    # Avoid the generation of .pyc files during package install
+    # Disable pip's cache, then reduce the size of the image
+    PIP_NO_CACHE_DIR=off \
+    # Save runtime because it is not look for updating pip version
+    PIP_DISABLE_PIP_VERSION_CHECK=on \
+    PIP_DEFAULT_TIMEOUT=100 \
+    # Disable poetry interaction
+    POETRY_NO_INTERACTION=1 \
+    POETRY_VIRTUALENVS_CREATE=1 \
+    POETRY_VIRTUALENVS_IN_PROJECT=1 \
+    POETRY_CACHE_DIR=/tmp/poetry_cache
+
+FROM poetry as build
 COPY pyproject.toml poetry.lock ./
+RUN poetry install --no-root --without dev && rm -rf ${POETRY_CACHE_DIR};
 
-# Install dependencies
-RUN poetry install
 
-# Copy the rest of the code
+FROM build as test
+# Install dev dependencies
+RUN poetry install --only dev --no-root && rm -rf ${POETRY_CACHE_DIR};
+COPY . .
+# Run tests
+USER app
+RUN poetry run pytest tests
+
+
+FROM base as production
+RUN mkdir -p /venv && chown ${UID}:${GID} /venv
+
+# By adding /venv/bin to the PATH, the dependencies in the virtual environment
+# are used
+ENV VIRTUAL_ENV=/venv \
+    PATH="/venv/bin:$PATH"
+
+COPY --chown=${UID}:${GID} . /app
+COPY --chown=${UID}:${GID} --from=build "/app/.venv" ${VIRTUAL_ENV}
 COPY . .
 
-EXPOSE 8000
-
-CMD ["poetry", "run", "gunicorn", "-b", "0.0.0.0", "zephir_api:create_app()"]
+# Switch to the app user
+USER app

@@ -1,8 +1,16 @@
 services:
   zephir-api:
-    image: zephir-api:latest
-    build: .
+    build:
+      context: .
+      target: production
+    command: ["python", "-m", "gunicorn", "-b", "0.0.0.0", "zephir_api:create_app()"]
     ports:
       - "8000:8000"
     env_file:
       - .env
+    depends_on:
+      - test
+  test:
+    build:
+      context: .
+      target: test
