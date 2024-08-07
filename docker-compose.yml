@@ -3,11 +3,24 @@ services:
     build:
       context: .
       target: production
-    command: ["python", "-m", "gunicorn", "-b", "0.0.0.0", "zephir_api:create_app()"]
+    command: ["python", "-m", "gunicorn", "--log-level", "{$LOG_LEVEL:-INFO}", "-b", "0.0.0.0:${APP_PORT:-8000}", "app:create_app()"]
     ports:
-      - "8000:8000"
-    env_file:
-      - .env
+      - "${APP_PORT-8000}:${APP_PORT-8000}"
+    environment:
+      # Required
+      - FLASK_ENV
+      - APP_PORT
+      - LOG_LEVEL
+
+      # One of the following must be set
+      - DATABASE_URI
+
+      - DB_CREDENTIALS_SECRET_NAME
+
+      - DB_USERNAME
+      - DB_PASSWORD
+      - DB_HOST
+      - DB_DATABASE
     depends_on:
       - test
   test:

@@ -1,4 +1,4 @@
-FROM python:3.12-slim-bullseye as base
+FROM python:3.12-slim-bullseye AS base
 # Allowing the argumenets to be read into the dockerfile. Ex:  .env > compose.yml > Dockerfile
 ARG UID=1000
 ARG GID=1000
@@ -11,7 +11,7 @@ RUN useradd -m -d /app -u ${UID} -g ${GID} -o -s /bin/bash app
 WORKDIR /app
 
 # Both build and development need poetry, so it is its own step.
-FROM base as poetry
+FROM base AS poetry
 RUN pip install poetry
 
 # Use this page as a reference for python and poetry environment variables:
@@ -31,12 +31,12 @@ ENV PYTHONUNBUFFERED=1\
     POETRY_VIRTUALENVS_IN_PROJECT=1 \
     POETRY_CACHE_DIR=/tmp/poetry_cache
 
-FROM poetry as build
+FROM poetry AS build
 COPY pyproject.toml poetry.lock ./
 RUN poetry install --no-root --without dev && rm -rf ${POETRY_CACHE_DIR};
 
 
-FROM build as test
+FROM build AS test
 # Install dev dependencies
 RUN poetry install --only dev --no-root && rm -rf ${POETRY_CACHE_DIR};
 COPY . .
@@ -45,7 +45,7 @@ USER app
 RUN poetry run pytest tests
 
 
-FROM base as production
+FROM base AS production
 RUN mkdir -p /venv && chown ${UID}:${GID} /venv
 
 # By adding /venv/bin to the PATH, the dependencies in the virtual environment

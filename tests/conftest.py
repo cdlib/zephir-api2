@@ -1,10 +1,8 @@
 import os
 import pytest
-
-from flask_sqlalchemy import SQLAlchemy
-
 import shutil
-from zephir_api import create_app
+
+from app import create_app
 
 @pytest.fixture
 def td_tmpdir(request, tmpdir):
@@ -39,15 +37,25 @@ def td_tmpdir(request, tmpdir):
         # If the test data directory does not exist, return the path to the temporary directory
         return tmpdir
 
-@pytest.fixture
-def test_app(td_tmpdir):
-    app = create_app(f'sqlite:///{td_tmpdir}/db.sqlite')
-    app.config['TESTING'] = True
 
+@pytest.fixture
+def app(td_tmpdir):
+
+
+    class TestConfig:
+        TESTING = True
+        LOG_LEVEL = "DEBUG"
+        SQLALCHEMY_DATABASE_URI = f'sqlite:///{td_tmpdir}/db.sqlite'
+        SQLALCHEMY_TRACK_MODIFICATIONS = False
+        
+        
+    app = create_app(TestConfig)
     yield app
 
+
 @pytest.fixture
-def client(test_app):
-    client = test_app.test_client()
-    
+def client(app):
+    client = app.test_client()
     yield client
+
+
