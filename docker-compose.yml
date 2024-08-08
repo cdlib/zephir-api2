@@ -3,15 +3,15 @@ services:
     build:
       context: .
       target: production
-    command: ["python", "-m", "gunicorn", "--log-level", "{$LOG_LEVEL:-INFO}", "-b", "0.0.0.0:${APP_PORT:-8000}", "app:create_app()"]
+    command: ["python", "-m", "gunicorn", "--log-level", "${LOG_LEVEL:-INFO}", "-b", "0.0.0.0:${APP_PORT:-8000}", "app:create_app()"]
     ports:
-      - "${APP_PORT-8000}:${APP_PORT-8000}"
+      - "${APP_PORT:-8000}:${APP_PORT:-8000}"
     environment:
       # Required
       - FLASK_ENV
       - APP_PORT
       - LOG_LEVEL
-
+  
       # One of the following must be set
       - DATABASE_URI
 
