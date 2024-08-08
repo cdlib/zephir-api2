@@ -81,7 +81,6 @@ def item(htid):
 
 @blueprint.errorhandler(Exception)
 def handle_exception(error):
-    current_app.logger.debug(f"sqlachemy_database_uri: {current_app.config['SQLALCHEMY_DATABASE_URI']}")
     current_app.logger.debug(error)
     if isinstance(error, NoResultFound):
         return render_basic_response(404, str(error))
