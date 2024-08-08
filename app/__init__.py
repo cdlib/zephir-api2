@@ -12,8 +12,6 @@ def create_app(config_class=Config):
     # Set up logging
     app.logger.setLevel(app.config["LOG_LEVEL"])
     
-    app.logger.debug(f"sqlachemy_database_uri: {app.config['SQLALCHEMY_DATABASE_URI']}")
-
     # Initialize the database and ORM
     db.init_app(app)
 
