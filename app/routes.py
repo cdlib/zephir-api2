@@ -81,7 +81,7 @@ def item(htid):
 
 @blueprint.errorhandler(Exception)
 def handle_exception(error):
-    print(error)
+    current_app.logger.debug(error)
     if isinstance(error, NoResultFound):
         return render_basic_response(404, str(error))
     elif isinstance(error, UnacceptableParameterException):
