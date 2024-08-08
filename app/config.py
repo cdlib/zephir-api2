@@ -25,7 +25,7 @@ def get_database_uri():
     if database_uri:
         return database_uri
     
-    db_credentials_secret_name = os.getenv("DB_CREDENTIALS_SECRET_NAME")
+    db_credentials_secret_name = os.getenv("DATABASE_CREDENTIALS_SECRET_NAME")
     if db_credentials_secret_name:
         secret = get_secret(db_credentials_secret_name)
         db_username = secret["username"]
