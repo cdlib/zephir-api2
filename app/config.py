@@ -6,8 +6,7 @@ from botocore.exceptions import ClientError
 
 
 def get_secret(secret_name):
-    session = boto3.session.Session()
-    client = session.client("secretsmanager")
+    client = boto3.client("secretsmanager")
 
     try:
         get_secret_value_response = client.get_secret_value(
