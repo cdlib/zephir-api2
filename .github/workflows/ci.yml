@@ -28,7 +28,7 @@ jobs:
 
     - name: Run tests
       run: |
-        poetry run pytest app
+        poetry run pytest
       continue-on-error: false  
 
     - name: Run Bandit for security analysis
