@@ -38,5 +38,5 @@ jobs:
 
     - name: Run Ruff for linting
       run: |
-        poetry run ruff .
+        poetry run ruff check .
       continue-on-error: false 
