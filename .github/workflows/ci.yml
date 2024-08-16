@@ -26,9 +26,9 @@ jobs:
         pip install poetry
         poetry install --with dev
 
-    - name: Run tests
+     - name: Run tests with coverage
       run: |
-        poetry run pytest
+        poetry run pytest --cov=app --cov-report=term-missing tests
       continue-on-error: false  
 
     - name: Run Bandit for security analysis
