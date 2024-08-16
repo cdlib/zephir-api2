@@ -9,27 +9,34 @@ on:
       - github-ci
 
 jobs:
-  test:
+  build-and-test:
     runs-on: ubuntu-latest
 
     steps:
     - name: Checkout code
       uses: actions/checkout@v3
 
-    - name: Set up Docker Buildx
-      uses: docker/setup-buildx-action@v2
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.12'
 
-    - name: Build Docker image for testing
+    - name: Install dependencies
       run: |
-        docker build --target test -t zephir-api2:test .
+        pip install poetry
+        poetry install --with dev
 
     - name: Run tests
       run: |
-        docker run --rm zephir-api2:test
+        poetry run pytest app
+      continue-on-error: false  
 
-    - name: Upload test results
-      if: always()
-      uses: actions/upload-artifact@v3
-      with:
-        name: pytest-results
-        path: ./tests 
+    - name: Run Bandit for security analysis
+      run: |
+        poetry run bandit -r app
+      continue-on-error: false  
+
+    - name: Run Ruff for linting
+      run: |
+        poetry run ruff .
+      continue-on-error: false 
