@@ -44,7 +44,7 @@ def test_default_content_negotiation(client):
     assert response.headers['Content-Type'] == 'text/xml'
 
     with pytest.raises(json.JSONDecodeError):
-        response_json = json.loads(response.data)
+        json.loads(response.data)
 
 
 def test_xml_content_negotiation(client):
@@ -53,7 +53,7 @@ def test_xml_content_negotiation(client):
     assert response.headers['Content-Type'] == 'text/xml'
 
     with pytest.raises(json.JSONDecodeError):
-        response_json = json.loads(response.data)
+        json.loads(response.data)
 
 
 def test_json_content_negotiation(client):
@@ -62,7 +62,7 @@ def test_json_content_negotiation(client):
     assert response.headers['Content-Type'] == 'application/json'
 
     try:
-        response_json = json.loads(response.data)
+        json.loads(response.data)
     except json.JSONDecodeError:
         pytest.fail('Response body is not valid JSON')
 
@@ -73,7 +73,7 @@ def test_json_overrides_xml(client):
     assert response.headers['Content-Type'] == 'application/json'
 
     try:
-        response_json = json.loads(response.data)
+        json.loads(response.data)
     except json.JSONDecodeError:
         pytest.fail('Response body is not valid JSON')
 
@@ -84,4 +84,4 @@ def test_xml_overrides_json(client):
     assert response.headers['Content-Type'] == 'text/xml'
 
     with pytest.raises(json.JSONDecodeError):
-        response_json = json.loads(response.data)
+        json.loads(response.data)
