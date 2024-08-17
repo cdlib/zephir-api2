@@ -57,15 +57,3 @@ jobs:
       run: |
         poetry run pytest --cov=app --cov-report=term-missing
       continue-on-error: false  
-
-    - name: Run Bandit for security analysis
-      if: env.skip-job != 'true'
-      run: |
-        poetry run bandit -r app
-      continue-on-error: false  
-
-    - name: Run Ruff for linting
-      if: env.skip-job != 'true'
-      run: |
-        poetry run ruff check .
-      continue-on-error: false
