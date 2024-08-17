@@ -1,6 +1,4 @@
-# FROM python:3.12-slim-bullseye AS base
-ARG PYTHON_VERSION=3.12
-FROM python:${PYTHON_VERSION}-slim-bullseye AS base
+FROM python:3.12-slim-bullseye AS base
 # Allowing the argumenets to be read into the dockerfile. Ex:  .env > compose.yml > Dockerfile
 ARG UID=1000
 ARG GID=1000
