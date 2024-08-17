@@ -1,4 +1,4 @@
-name: CodeMatrix
+name: Code Matrix
 
 on:
   pull_request:

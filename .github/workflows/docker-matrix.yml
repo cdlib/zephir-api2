@@ -1,4 +1,4 @@
-name: DockerMatrix
+name: Docker Matrix
 
 on:
   pull_request:
