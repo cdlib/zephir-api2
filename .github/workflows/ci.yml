@@ -9,8 +9,12 @@ on:
       - github-ci
 
 jobs:
-  test-code-suite:
+  test-suite:
     runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        python-version: [3.12, 3.x]
 
     steps:
     - name: Checkout code
@@ -19,7 +23,7 @@ jobs:
     - name: Set up Python
       uses: actions/setup-python@v4
       with:
-        python-version: [3.11, 3.x]
+        python-version: ${{ matrix.python-version }}
 
     - name: Install dependencies
       run: |
