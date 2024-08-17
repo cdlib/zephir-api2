@@ -18,6 +18,10 @@ jobs:
       with:
         python-version: 3.x
 
+    - name: Display Python version
+      run: |
+        python --version
+
     - name: Install dependencies
       run: |
         pip install poetry
