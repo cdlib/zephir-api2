@@ -1,9 +1,9 @@
 name: Code Matrix
 
 on:
-  pull_request:
+  push:
     branches:
-      - main
+      - github-ci
 
 jobs:
   CodeMatrix:
@@ -11,7 +11,7 @@ jobs:
 
     strategy:
       matrix:
-        python-version: [3.12, 3.x]
+        python-version: [3.12, 3.13.0rc1, 3.x]
 
     steps:
     - name: Checkout code

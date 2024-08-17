@@ -1,12 +1,12 @@
 name: CI
 
 on:
-  pull_request:
+  push:
     branches:
-      - main
+      - github-ci
 
 jobs:
-  test-suite:
+  CI:
     runs-on: ubuntu-latest
 
     steps:
