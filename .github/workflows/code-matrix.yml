@@ -13,6 +13,9 @@ jobs:
       matrix:
         python-version: [3.12, 3.x]
 
+    env:
+      MUST_RUN_VERSION: "3.12"  # Define the version you want to always run
+
     steps:
     - name: Checkout code
       uses: actions/checkout@v3
@@ -22,31 +25,47 @@ jobs:
       with:
         python-version: ${{ matrix.python-version }}
 
-    - name: Display Python version
+    - name: Get Python version
+      id: python_version
       run: |
         python --version
 
+    - name: Check if Python versions match
+      id: check_version
+      run: |
+        if [[ "${{ matrix.python-version }}" == "3.x" ]]; then
+          PYTHON_VERSION=$(python --version | grep -oP '(?<=Python\s)[\d.]+')
+          if [[ "$PYTHON_VERSION" == "${{ env.MUST_RUN_VERSION }}."* ]]; then
+            echo "skip-job=true" >> $GITHUB_ENV
+          fi
+        fi
+
     - name: Install dependencies
+      if: env.skip-job != 'true'
       run: |
         pip install poetry
         poetry install --with dev
 
     - name: Update dependencies to the latest allowed versions
+      if: env.skip-job != 'true'
       run: |
         poetry update
         echo "Dependencies updated"
 
     - name: Run tests with coverage
+      if: env.skip-job != 'true'
       run: |
         poetry run pytest --cov=app --cov-report=term-missing
       continue-on-error: false  
 
     - name: Run Bandit for security analysis
+      if: env.skip-job != 'true'
       run: |
         poetry run bandit -r app
       continue-on-error: false  
 
     - name: Run Ruff for linting
+      if: env.skip-job != 'true'
       run: |
         poetry run ruff check .
-      continue-on-error: false 
+      continue-on-error: false
