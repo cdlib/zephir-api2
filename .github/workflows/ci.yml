@@ -41,7 +41,9 @@ jobs:
         poetry run ruff check .
       continue-on-error: false 
 
-    - name: Build Docker image and run testing
+    - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v2
+
+    - name: Build Docker image and run tests (during build)
       run: |
-        docker build --target test -t
+        docker build --target test -t zephir-api2:test .
