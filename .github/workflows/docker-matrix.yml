@@ -1,0 +1,28 @@
+name: DockerMatrix
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  DockerMatrix:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        python-version: ['3.12', '3.13']
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v2
+
+    - name: Build Docker image and run tests
+      run: |
+        docker build --build-arg PYTHON_VERSION=${{ matrix.python-version }} --target test -t zephir-api2:test-${{ matrix.python-version }} .
+        docker run --rm zephir-api2:test-${{ matrix.python-version }}
+
+      continue-on-error: false  
