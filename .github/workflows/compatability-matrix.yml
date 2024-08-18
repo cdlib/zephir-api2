@@ -46,25 +46,27 @@ jobs:
         pip install poetry
         poetry install --with dev
 
-    - name: Check for outdated dependencies with major version updates
-      if: env.skip-job != 'true'
+    - name: Run the major version update check script
       run: |
-        # Get outdated dependencies with Poetry
-        outdated=$(poetry show --outdated --no-dev)
+        # Get outdated dependencies with Poetry, excluding dev dependencies
+        outdated=$(poetry show --outdated --only main)
 
         # Loop through each outdated dependency and check the versions
         echo "$outdated" | while read -r line; do
-          # Extract the package name, current version, and latest version
-          package_name=$(echo $line | awk '{print $1}')
-          current_version=$(echo $line | awk '{print $2}')
-          latest_version=$(echo $line | awk '{print $4}')
+          # Check if the line contains version information
+          if [[ $line =~ ^[a-zA-Z0-9_-]+\s+[0-9]+\.[0-9]+\.[0-9]+\s+->\s+[0-9]+\.[0-9]+\.[0-9]+ ]]; then
+            # Extract the package name, current version, and latest version
+            package_name=$(echo $line | awk '{print $1}')
+            current_version=$(echo $line | awk '{print $2}')
+            latest_version=$(echo $line | awk '{print $4}')
 
-          # Compare major versions
-          current_major=$(echo $current_version | cut -d '.' -f 1)
-          latest_major=$(echo $latest_version | cut -d '.' -f 1)
+            # Compare major versions
+            current_major=$(echo $current_version | cut -d '.' -f 1)
+            latest_major=$(echo $latest_version | cut -d '.' -f 1)
 
-          if [ "$current_major" -lt "$latest_major" ]; then
-            echo "$package_name: $current_version -> $latest_version (Major version update available)"
+            if [ "$current_major" -lt "$latest_major" ]; then
+              echo "$package_name: $current_version -> $latest_version (Major version update available)"
+            fi
           fi
         done
         
