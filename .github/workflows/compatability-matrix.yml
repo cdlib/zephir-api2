@@ -1,4 +1,4 @@
-name: Code Matrix
+name: Compatibility Matrix
 
 on:
   push:
@@ -6,7 +6,7 @@ on:
       - github-ci
 
 jobs:
-  CodeMatrix:
+  CompatibilityMatrix:
     runs-on: ubuntu-latest
 
     strategy:
@@ -18,10 +18,10 @@ jobs:
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@v4  # Updated to the latest version
+      uses: actions/checkout@v4
 
     - name: Set up Python
-      uses: actions/setup-python@v5.1.1  # Updated to the latest version
+      uses: actions/setup-python@v5.1.1
       with:
         python-version: ${{ matrix.python-version }}
 
@@ -55,17 +55,5 @@ jobs:
     - name: Run tests with coverage
       if: env.skip-job != 'true'
       run: |
-        poetry run pytest --cov=app --cov-report=term-missing
+        poetry run pytest
       continue-on-error: false  
-
-    - name: Run Bandit for security analysis
-      if: env.skip-job != 'true'
-      run: |
-        poetry run bandit -r app
-      continue-on-error: false  
-
-    - name: Run Ruff for linting
-      if: env.skip-job != 'true'
-      run: |
-        poetry run ruff check .
-      continue-on-error: false

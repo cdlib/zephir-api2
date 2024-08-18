@@ -1,0 +1,49 @@
+name: Code Analysis
+
+on:
+  push:
+    branches:
+      - github-ci
+
+jobs:
+  CodeAnalysis:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v5.1.1
+      with:
+        python-version: 3.x
+
+    - name: Display Python version
+      run: |
+        python --version
+
+    - name: Install dependencies
+      run: |
+        pip install poetry
+        poetry install --with dev
+
+    - name: Run tests with coverage in latest stable 3.x
+      run: |
+        poetry run pytest --cov=app --cov-report=term-missing
+      continue-on-error: false  
+
+    - name: Run Bandit for security analysis
+      run: |
+        poetry run bandit -r app
+      continue-on-error: false  
+
+    - name: Run Ruff for linting
+      run: |
+        poetry run ruff check .
+      continue-on-error: false 
+
+    - name: Run Vulture for dead code analysis
+      run: |
+        poetry run vulture . --min-confidence 70
+      continue-on-error: false 
+
