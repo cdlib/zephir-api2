@@ -46,13 +46,34 @@ jobs:
         pip install poetry
         poetry install --with dev
 
+    - name: Check for outdated dependencies with major version updates
+      run: |
+        # Get outdated dependencies with Poetry
+        outdated=$(poetry show --outdated --no-dev)
+
+        # Loop through each outdated dependency and check the versions
+        echo "$outdated" | while read -r line; do
+          # Extract the package name, current version, and latest version
+          package_name=$(echo $line | awk '{print $1}')
+          current_version=$(echo $line | awk '{print $2}')
+          latest_version=$(echo $line | awk '{print $4}')
+
+          # Compare major versions
+          current_major=$(echo $current_version | cut -d '.' -f 1)
+          latest_major=$(echo $latest_version | cut -d '.' -f 1)
+
+          if [ "$current_major" -lt "$latest_major" ]; then
+            echo "$package_name: $current_version -> $latest_version (Major version update available)"
+          fi
+        done
+        
     - name: Update dependencies to the latest allowed versions
       if: env.skip-job != 'true'
       run: |
         poetry update
         echo "Dependencies updated"
 
-    - name: Run tests with coverage
+    - name: Run tests
       if: env.skip-job != 'true'
       run: |
         poetry run pytest
