@@ -55,15 +55,15 @@ jobs:
         # Loop through each outdated dependency and check the versions
         echo "$outdated" | while read -r line; do
           # Check if the line contains version information
-          if [[ $line =~ ^[a-zA-Z0-9_-]+\s+[0-9]+\.[0-9]+\.[0-9]+\s+->\s+[0-9]+\.[0-9]+\.[0-9]+ ]]; then
+          if [[ "$line" =~ ^[a-zA-Z0-9_-]+\ +[0-9]+\.[0-9]+\.[0-9]+\ +->\ +[0-9]+\.[0-9]+\.[0-9]+ ]]; then
             # Extract the package name, current version, and latest version
-            package_name=$(echo $line | awk '{print $1}')
-            current_version=$(echo $line | awk '{print $2}')
-            latest_version=$(echo $line | awk '{print $4}')
+            package_name=$(echo "$line" | awk '{print $1}')
+            current_version=$(echo "$line" | awk '{print $2}')
+            latest_version=$(echo "$line" | awk '{print $4}')
 
             # Compare major versions
-            current_major=$(echo $current_version | cut -d '.' -f 1)
-            latest_major=$(echo $latest_version | cut -d '.' -f 1)
+            current_major=$(echo "$current_version" | cut -d '.' -f 1)
+            latest_major=$(echo "$latest_version" | cut -d '.' -f 1)
 
             if [ "$current_major" -lt "$latest_major" ]; then
               echo "$package_name: $current_version -> $latest_version (Major version update available)"
