@@ -47,6 +47,7 @@ jobs:
         poetry install --with dev
 
     - name: Check for outdated dependencies with major version updates
+      if: env.skip-job != 'true'
       run: |
         # Get outdated dependencies with Poetry
         outdated=$(poetry show --outdated --no-dev)
