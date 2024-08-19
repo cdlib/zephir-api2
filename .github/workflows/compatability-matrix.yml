@@ -12,7 +12,7 @@ jobs:
     strategy:
       matrix:
         python-version: [3.12]
-        update-strategy: [none, minor, major]
+        update-strategy: [minor, major]
 
     steps:
     - name: Checkout code
@@ -38,11 +38,11 @@ jobs:
 
     - name: Update dependencies
       run: |
-        if [[ "${{ matrix.update-strategy }}" == "none" ]]; then
-          echo "Skipping updates as per the strategy"
-        elif [[ "${{ matrix.update-strategy }}" == "minor" ]]; then
+        if [[ "${{ matrix.update-strategy }}" == "minor" ]] || [[ "${{ matrix.update-strategy }}" == "major" ]]; then
+          echo "Updating to minor versions"
           poetry update
         elif [[ "${{ matrix.update-strategy }}" == "major" ]]; then
+          echo "Updating to major versions"
           sed -i 's/\^/>=/g' pyproject.toml  # Adjust constraints to allow major updates
           poetry update
         fi
