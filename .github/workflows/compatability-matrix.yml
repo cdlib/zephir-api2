@@ -28,19 +28,19 @@ jobs:
       run: |
         python --version
 
-
-    - name: Install Poetry
+    - name: Install locked dependencies
       run: |
-        pip install poetry
+        poetry install --with dev
 
-    - name: Install dependencies
+    - name: Update dependencies
       run: |
         if [[ "${{ matrix.update-strategy }}" == "none" ]]; then
-          poetry install --no-root
+          echo "Skipping updates as per the strategy"
         elif [[ "${{ matrix.update-strategy }}" == "minor" ]]; then
           poetry update
         elif [[ "${{ matrix.update-strategy }}" == "major" ]]; then
-          poetry up --latest
+          sed -i 's/\^/>=/g' pyproject.toml  # Adjust constraints to allow major updates
+          poetry update
         fi
 
     - name: Run tests
