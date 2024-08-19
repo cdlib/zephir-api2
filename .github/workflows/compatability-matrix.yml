@@ -36,11 +36,11 @@ jobs:
     - name: Install dependencies
       run: |
         if [[ "${{ matrix.update-strategy }}" == "none" ]]; then
-          poetry install --no-update --with dev
+          poetry install --no-root
         elif [[ "${{ matrix.update-strategy }}" == "minor" ]]; then
-          poetry update --minor
-        elif [[ "${{ matrix.update-strategy }}" == "major" ]]; then
           poetry update
+        elif [[ "${{ matrix.update-strategy }}" == "major" ]]; then
+          poetry up --latest
         fi
 
     - name: Run tests
