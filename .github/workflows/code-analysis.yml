@@ -3,7 +3,7 @@ name: Code Analysis
 on:
   push:
     branches:
-      - github-ci
+      - '**'
 
 jobs:
   CodeAnalysis:
@@ -31,7 +31,7 @@ jobs:
       if: env.skip-job != 'true'
       run: |
         poetry show --outdated --only main
-        
+
     - name: Run tests with coverage in latest stable 3.x
       run: |
         poetry run pytest --cov=app --cov-report=term-missing
