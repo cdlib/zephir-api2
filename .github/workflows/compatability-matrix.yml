@@ -28,7 +28,11 @@ jobs:
       run: |
         python --version
 
-    - name: Install locked dependencies
+    - name: Install Poetry
+      run: |
+        pip install poetry
+
+    - name: Install locked dependencies (including dev)
       run: |
         poetry install --with dev
 
