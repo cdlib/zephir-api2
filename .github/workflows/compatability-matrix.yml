@@ -47,12 +47,13 @@ jobs:
           poetry install --with dev
           poetry update
         elif [[ "${{ matrix.update-strategy }}" == "major" ]]; then
-          echo "Updating to major versions
+          echo "Updating to major versions"
           cp pyproject.toml pyproject.toml.backup
           sed -i 's/\^/>=/g' pyproject.toml  # Adjust constraints to allow major updates
           poetry install --with dev
           mv pyproject.toml.backup pyproject.toml
         fi
+
 
     - name: Restore lock file
       run: |
