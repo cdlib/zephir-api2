@@ -17,7 +17,6 @@ jobs:
         update-strategy: [minor, major]
         update-method: [update, fresh]
 
-
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
@@ -36,18 +35,15 @@ jobs:
       run: |
         pip install poetry
 
-    # - name: Install locked dependencies (including dev)
-    #   run: |
-    #     poetry install --with dev --no-lock
+    - name: Backup lock file
+      if: matrix.update-method == 'fresh'
+      run: |
+        if [ -f poetry.lock ]; then
+          mv poetry.lock poetry.lock.backup
+        fi
 
     - name: Install and update dependencies
       run: |
-        if [[ "${{ matrix.update-method }}" == "fresh" ]]; then
-          echo "Fresh install, Removing lock file"
-          rm -f poetry.lock
-        elif [[ "${{ matrix.update-method }}" == "update" ]]; then
-          echo "Updating from existing lock file"
-        fi
         if [[ "${{ matrix.update-strategy }}" == "minor" ]]; then
           echo "Updating to minor versions"
           poetry install --with dev
@@ -59,7 +55,14 @@ jobs:
           poetry update
         fi
 
+    - name: Restore lock file
+      if: matrix.update-method == 'fresh'
+      run: |
+        if [ -f poetry.lock.backup ]; then
+          mv poetry.lock.backup poetry.lock
+        fi
+
     - name: Run tests
       run: |
         poetry run pytest
-      continue-on-error: false
+      continue-on-error: false  # Set to true if you want to continue on test failures
