@@ -44,7 +44,7 @@ jobs:
         if [[ "${{ matrix.update-strategy }}" == "fresh" ]]; then
           echo "Fresh install, Removing lock file"
           rm -f poetry.lock
-        elif
+        elif [[ "${{ matrix.update-strategy }}" == "update" ]]; then
           echo "Updating from existing lock file"
         fi
         if [[ "${{ matrix.update-strategy }}" == "minor" ]]; then
