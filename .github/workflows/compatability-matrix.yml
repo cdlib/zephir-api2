@@ -11,9 +11,10 @@ jobs:
     runs-on: ubuntu-latest
 
     strategy:
+      fail-fast: false
       matrix:
         python-version: ['3.12', '3.13.0-rc.1']
-        update-strategy: [minor, major, clean]
+        update-strategy: [minor, major]
         update-method: [update, fresh]
 
 
@@ -41,10 +42,10 @@ jobs:
 
     - name: Install and update dependencies
       run: |
-        if [[ "${{ matrix.update-strategy }}" == "fresh" ]]; then
+        if [[ "${{ matrix.update-method }}" == "fresh" ]]; then
           echo "Fresh install, Removing lock file"
           rm -f poetry.lock
-        elif [[ "${{ matrix.update-strategy }}" == "update" ]]; then
+        elif [[ "${{ matrix.update-method }}" == "update" ]]; then
           echo "Updating from existing lock file"
         fi
         if [[ "${{ matrix.update-strategy }}" == "minor" ]]; then
