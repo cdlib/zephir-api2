@@ -38,10 +38,12 @@ jobs:
 
     - name: Update dependencies
       run: |
-        if [[ "${{ matrix.update-strategy }}" == "minor" ]] || [[ "${{ matrix.update-strategy }}" == "major" ]]; then
+        if [[ "${{ matrix.update-strategy }}" == "minor" ]]; then
           echo "Updating to minor versions"
           poetry update
         elif [[ "${{ matrix.update-strategy }}" == "major" ]]; then
+          echo "Updating to minor versions first..."
+          poetry update
           echo "Updating to major versions"
           sed -i 's/\^/>=/g' pyproject.toml  # Adjust constraints to allow major updates
           poetry update
