@@ -41,11 +41,13 @@ jobs:
       run: |
         if [[ "${{ matrix.update-strategy }}" == "minor" ]]; then
           echo "Updating to minor versions"
-          poetry install --with dev --no-lock
+          rm -f poetry.lock
+          poetry install --with dev
         elif [[ "${{ matrix.update-strategy }}" == "major" ]]; then
           echo "Updating to major versions"
+          rm -f poetry.lock
           sed -i 's/\^/>=/g' pyproject.toml  # Adjust constraints to allow major updates
-          poetry install --with dev --no-lock
+          poetry install --with dev 
         fi
 
     - name: Run tests
