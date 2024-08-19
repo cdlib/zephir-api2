@@ -27,6 +27,11 @@ jobs:
         pip install poetry
         poetry install --with dev
 
+    - name: Check for outdated dependencies
+      if: env.skip-job != 'true'
+      run: |
+        poetry show --outdated --only main
+        
     - name: Run tests with coverage in latest stable 3.x
       run: |
         poetry run pytest --cov=app --cov-report=term-missing
