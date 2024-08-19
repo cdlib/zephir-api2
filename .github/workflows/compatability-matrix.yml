@@ -1,9 +1,7 @@
 name: Compatibility Matrix
 
 on:
-  push:
-    branches:
-      - github-ci
+  workflow_dispatch:
 
 jobs:
   CompatibilityMatrix:
