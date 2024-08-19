@@ -13,7 +13,9 @@ jobs:
     strategy:
       matrix:
         python-version: ['3.12', '3.13.0-rc.1']
-        update-strategy: [minor, major]
+        update-strategy: [minor, major, clean]
+        update-method: [update, fresh]
+
 
     steps:
     - name: Checkout code
@@ -37,17 +39,23 @@ jobs:
     #   run: |
     #     poetry install --with dev --no-lock
 
-    - name: Update dependencies
+    - name: Install and update dependencies
       run: |
+        if [[ "${{ matrix.update-strategy }}" == "fresh" ]]; then
+          echo "Fresh install, Removing lock file"
+          rm -f poetry.lock
+        elif
+          echo "Updating from existing lock file"
+        if
         if [[ "${{ matrix.update-strategy }}" == "minor" ]]; then
           echo "Updating to minor versions"
-          rm -f poetry.lock
           poetry install --with dev
+          poetry update
         elif [[ "${{ matrix.update-strategy }}" == "major" ]]; then
           echo "Updating to major versions"
-          rm -f poetry.lock
           sed -i 's/\^/>=/g' pyproject.toml  # Adjust constraints to allow major updates
-          poetry install --with dev 
+          poetry install --with dev
+          poetry update
         fi
 
     - name: Run tests
