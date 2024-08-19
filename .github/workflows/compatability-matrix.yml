@@ -46,7 +46,7 @@ jobs:
           rm -f poetry.lock
         elif
           echo "Updating from existing lock file"
-        if
+        fi
         if [[ "${{ matrix.update-strategy }}" == "minor" ]]; then
           echo "Updating to minor versions"
           poetry install --with dev
