@@ -33,19 +33,19 @@ jobs:
       run: |
         pip install poetry
 
-    - name: Install locked dependencies (including dev)
-      run: |
-        poetry install --with dev
+    # - name: Install locked dependencies (including dev)
+    #   run: |
+    #     poetry install --with dev --no-lock
 
     - name: Update dependencies
       run: |
         if [[ "${{ matrix.update-strategy }}" == "minor" ]]; then
           echo "Updating to minor versions"
-          poetry update
+          poetry install --with dev --no-lock
         elif [[ "${{ matrix.update-strategy }}" == "major" ]]; then
           echo "Updating to major versions"
           sed -i 's/\^/>=/g' pyproject.toml  # Adjust constraints to allow major updates
-          poetry update
+          poetry install --with dev --no-lock
         fi
 
     - name: Run tests
