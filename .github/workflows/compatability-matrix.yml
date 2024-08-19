@@ -11,11 +11,8 @@ jobs:
 
     strategy:
       matrix:
-        python-version: [3.12, 3.x]
+        python-version: [3.12]
         update-strategy: [none, minor, major]
-
-    env:
-      MUST_RUN_VERSION: "3.12"
 
     steps:
     - name: Checkout code
@@ -31,23 +28,12 @@ jobs:
       run: |
         python --version
 
-    - name: Check if Python versions match
-      id: check_version
-      run: |
-        if [[ "${{ matrix.python-version }}" == "3.x" ]]; then
-          PYTHON_VERSION=$(python --version | grep -oP '(?<=Python\s)[\d.]+')
-          if [[ "$PYTHON_VERSION" == "${{ env.MUST_RUN_VERSION }}."* ]]; then
-            echo "skip-job=true" >> $GITHUB_ENV
-          fi
-        fi
 
     - name: Install Poetry
-      if: env.skip-job != 'true'
       run: |
         pip install poetry
 
     - name: Install dependencies
-      if: env.skip-job != 'true'
       run: |
         if [[ "${{ matrix.update-strategy }}" == "none" ]]; then
           poetry install --no-update --with dev
@@ -58,7 +44,6 @@ jobs:
         fi
 
     - name: Run tests
-      if: env.skip-job != 'true'
       run: |
         poetry run pytest
       continue-on-error: false
