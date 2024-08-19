@@ -1,0 +1,64 @@
+name: Compatibility Matrix
+
+on:
+  workflow_dispatch:
+
+jobs:
+  CompatibilityMatrix:
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ['3.12', '3.13.0-rc.1']
+        update-strategy: [minor, major]
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v5.1.1
+      with:
+        python-version: ${{ matrix.python-version }}
+
+    - name: Get Python version
+      id: python_version
+      run: |
+        python --version
+
+    - name: Install Poetry
+      run: |
+        pip install poetry
+
+    - name: Backup lock file
+      run: |
+        if [ -f poetry.lock ]; then
+          mv poetry.lock poetry.lock.backup
+        fi
+
+    - name: Install and update dependencies
+      run: |
+        if [[ "${{ matrix.update-strategy }}" == "minor" ]]; then
+          echo "Updating to minor versions"
+          poetry install --with dev
+          poetry update
+        elif [[ "${{ matrix.update-strategy }}" == "major" ]]; then
+          echo "Updating to major versions"
+          cp pyproject.toml pyproject.toml.backup
+          sed -i 's/\^/>=/g' pyproject.toml  # Adjust constraints to allow major updates
+          poetry install --with dev
+          mv pyproject.toml.backup pyproject.toml
+        fi
+
+
+    - name: Restore lock file
+      run: |
+        if [ -f poetry.lock.backup ]; then
+          mv poetry.lock.backup poetry.lock
+        fi
+
+    - name: Run tests
+      run: |
+        poetry run pytest
+      continue-on-error: false  # Set to true if you want to continue on test failures

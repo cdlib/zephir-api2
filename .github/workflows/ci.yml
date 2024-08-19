@@ -1,0 +1,21 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - '**'
+
+jobs:
+  CI:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Docker Build
+      uses: docker/setup-buildx-action@v3.4.0
+
+    - name: Build current Docker image with tests
+      run: |
+        docker build --target test -t zephir-api2:test .
