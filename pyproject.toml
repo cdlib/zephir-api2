@@ -22,7 +22,6 @@ bandit = "^1.7.9"
 ruff = "^0.6.1"
 pytest-cov = "^5.0.0"
 vulture = "^2.11"
-poetry-plugin-up = "^0.7.2"
 
 [build-system]
 requires = ["poetry-core"]
