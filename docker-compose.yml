@@ -3,9 +3,9 @@ services:
     build:
       context: .
       target: production
-    command: ["python", "-m", "gunicorn", "--log-level", "${LOG_LEVEL:-INFO}", "-b", "0.0.0.0:${APP_PORT:-8000}", "app:create_app()"]
+    command: ["python", "-m", "gunicorn", "-c", "gunicorn_config.py"]
     ports:
-      - "${APP_PORT:-8000}:${APP_PORT:-8000}"
+      - "${APP_PORT}:${APP_PORT}"
     environment:
       # Required
       - FLASK_ENV
