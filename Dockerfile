@@ -53,7 +53,7 @@ RUN poetry run pytest tests
 FROM build AS test-minor-update
 # Install dev dependencies
 RUN poetry install --only dev --no-root && rm -rf ${POETRY_CACHE_DIR};
-RUN poetry update
+# RUN poetry update
 COPY . .
 # Run tests
 USER app
