@@ -1,4 +1,6 @@
-FROM python:3.12-slim-bullseye AS base
+ARG IMAGE_TAG=3.12-slim-bullseye
+
+FROM python:${IMAGE_TAG} AS base
 # Allowing the argumenets to be read into the dockerfile. Ex:  .env > compose.yml > Dockerfile
 ARG UID=1000
 ARG GID=1000
@@ -35,10 +37,23 @@ FROM poetry AS build
 COPY pyproject.toml poetry.lock ./
 RUN poetry install --no-root --without dev && rm -rf ${POETRY_CACHE_DIR};
 
+# FROM poetry AS build-minor-update
+# # Install minor version updates in the absence of poetry.lock file
+# COPY pyproject.toml poetry.lock ./
+# RUN poetry install --no-root --without dev && rm -rf ${POETRY_CACHE_DIR};
 
 FROM build AS test
 # Install dev dependencies
 RUN poetry install --only dev --no-root && rm -rf ${POETRY_CACHE_DIR};
+COPY . .
+# Run tests
+USER app
+RUN poetry run pytest tests
+
+FROM build AS test-minor-update
+# Install dev dependencies
+RUN poetry install --only dev --no-root && rm -rf ${POETRY_CACHE_DIR};
+RUN poetry update
 COPY . .
 # Run tests
 USER app

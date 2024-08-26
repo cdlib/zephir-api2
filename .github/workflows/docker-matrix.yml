@@ -1,0 +1,39 @@
+name: Compatibility Matrix
+
+on:
+  workflow_dispatch:
+
+jobs:
+  CompatibilityMatrix:
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        image-tag: ['3.12-slim-bullseye']
+        update-strategy: [default, minor]
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Docker Build
+      uses: docker/setup-buildx-action@v3.4.0
+
+    - name: Build current Docker image with tests
+      run: |
+        docker build --target test -t zephir-api2:test .
+    
+    - name: Install and update dependencies
+      run: |
+        if [[ "${{ matrix.update-strategy }}" == "default" ]]; then
+        
+        echo "Running normal test suite"
+        docker build --build-arg IMAGE_TAG=${{ matrix.image-tag }} --target test -t zephir-api2:test .
+        
+        elif [[ "${{ matrix.update-strategy }}" == "minor" ]]; then
+        
+        echo "Minor version update"
+        docker build --build-arg IMAGE_TAG=${{ matrix.image-tag }} --target test-minor-update -t zephir-api2:test .
+
+        fi
