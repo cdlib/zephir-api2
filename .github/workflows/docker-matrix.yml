@@ -38,6 +38,6 @@ jobs:
         elif [[ "${{ matrix.update-strategy }}" == "minor" ]]; then
         
         echo "Minor version update"
-        docker build --build-arg IMAGE_TAG=${{ matrix.image-tag }} --target test-without-lock -t zephir-api2:test .
+        docker build --build-arg IMAGE_TAG=${{ matrix.image-tag }} --target test-minor-update -t zephir-api2:test .
 
         fi
