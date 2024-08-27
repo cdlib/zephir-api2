@@ -78,7 +78,7 @@ RUN pip uninstall -y poetry
 # Remove poetry.lock and install dependencies
 RUN rm poetry.lock
 ## Substitute all numbers in pyproject.toml with *
-RUN sed -i 's/[0-9]/*/g' pyproject.toml
+RUN sed -i 's/\^*[0-9][0-9A-Za-z.\-]*/*/g' pyproject.toml
 # Print toml file
 RUN cat pyproject.toml
 RUN pip install poetry
