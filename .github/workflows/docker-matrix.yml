@@ -39,7 +39,7 @@ jobs:
         echo "Running normal test with updated dependencies"
         docker build --build-arg IMAGE_TAG=${{ matrix.image-tag }} --target test-update -t zephir-api2:test .
 
-        elif [[ "${{ matrix.update-strategy }}" == "update-clearn" ]]; then
+        elif [[ "${{ matrix.update-strategy }}" == "unlocked-install" ]]; then
         
         echo "Running normal test with updated dependencies"
         docker build --build-arg IMAGE_TAG=${{ matrix.image-tag }} --target test-unlocked-install -t zephir-api2:test .
