@@ -62,9 +62,26 @@ RUN poetry run pytest tests
 FROM build AS test-unlocked-install
 # Uninstall poetry and install it again
 RUN pip uninstall -y poetry
-RUN pip install poetry
 # Remove poetry.lock and install dependencies
 RUN rm poetry.lock
+RUN pip install poetry
+RUN poetry install --no-root --without dev && rm -rf ${POETRY_CACHE_DIR};
+RUN poetry install --only dev --no-root && rm -rf ${POETRY_CACHE_DIR};
+COPY . .
+# Run tests
+USER app
+RUN poetry run pytest tests
+
+FROM build AS test-unlocked-install
+# Uninstall poetry and install it again
+RUN pip uninstall -y poetry
+# Remove poetry.lock and install dependencies
+RUN rm poetry.lock
+## Substitute all numbers in pyproject.toml with *
+RUN sed -i 's/[0-9]/*/g' pyproject.toml
+# Print toml file
+RUN cat pyproject.toml
+RUN pip install poetry
 RUN poetry install --no-root --without dev && rm -rf ${POETRY_CACHE_DIR};
 RUN poetry install --only dev --no-root && rm -rf ${POETRY_CACHE_DIR};
 COPY . .
