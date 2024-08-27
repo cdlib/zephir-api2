@@ -49,6 +49,7 @@ COPY . .
 # Run tests
 USER app
 RUN poetry run pytest tests
+RUN poetry show
 
 FROM build AS test-update
 # Install dev dependencies
@@ -58,6 +59,7 @@ COPY . .
 # Run tests
 USER app
 RUN poetry run pytest tests
+RUN poetry show
 
 FROM build AS test-unlocked-install
 # Uninstall poetry and install it again
@@ -78,7 +80,7 @@ RUN pip uninstall -y poetry
 # Remove poetry.lock and install dependencies
 RUN rm poetry.lock
 ## Substitute all numbers in pyproject.toml with *
-RUN sed -i 's/\^*[0-9][0-9A-Za-z.\-]*/*/g' pyproject.toml
+RUN sed -i 's/\^/>=/g' pyproject.toml
 # Print toml file
 RUN cat pyproject.toml
 RUN pip install poetry
@@ -88,6 +90,7 @@ COPY . .
 # Run tests
 USER app
 RUN poetry run pytest tests
+RUN poetry show
 
 
 FROM base AS production
