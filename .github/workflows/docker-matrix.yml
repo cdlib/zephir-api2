@@ -1,6 +1,9 @@
 name: Compatibility Matrix
 
 on:
+  push:
+    branches:
+      - 'extend-matrix'
   workflow_dispatch:
 
 jobs:
