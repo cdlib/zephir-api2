@@ -72,7 +72,7 @@ COPY . .
 USER app
 RUN poetry run pytest tests
 
-FROM build AS test-unlocked-install
+FROM build AS test-unpegged-install
 # Uninstall poetry and install it again
 RUN pip uninstall -y poetry
 # Remove poetry.lock and install dependencies
