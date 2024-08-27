@@ -50,10 +50,23 @@ COPY . .
 USER app
 RUN poetry run pytest tests
 
-FROM build AS test-minor-update
+FROM build AS test-update
 # Install dev dependencies
 RUN poetry install --only dev --no-root && rm -rf ${POETRY_CACHE_DIR};
 RUN poetry update
+COPY . .
+# Run tests
+USER app
+RUN poetry run pytest tests
+
+FROM build AS test-unlocked-install
+# Uninstall poetry and install it again
+RUN pip uninstall -y poetry
+RUN pip install poetry
+# Remove poetry.lock and install dependencies
+RUN rm poetry.lock
+RUN poetry install --no-root --without dev && rm -rf ${POETRY_CACHE_DIR};
+RUN poetry install --only dev --no-root && rm -rf ${POETRY_CACHE_DIR};
 COPY . .
 # Run tests
 USER app

@@ -11,7 +11,7 @@ jobs:
       fail-fast: false
       matrix:
         image-tag: ['3.12-slim-bullseye']
-        update-strategy: [default, minor]
+        update-strategy: [default, update, unlocked-install]
 
     steps:
     - name: Checkout code
@@ -31,9 +31,14 @@ jobs:
         echo "Running normal test suite"
         docker build --build-arg IMAGE_TAG=${{ matrix.image-tag }} --target test -t zephir-api2:test .
         
-        elif [[ "${{ matrix.update-strategy }}" == "minor" ]]; then
+        elif [[ "${{ matrix.update-strategy }}" == "update" ]]; then
         
-        echo "Minor version update"
-        docker build --build-arg IMAGE_TAG=${{ matrix.image-tag }} --target test-minor-update -t zephir-api2:test .
+        echo "Running normal test with updated dependencies"
+        docker build --build-arg IMAGE_TAG=${{ matrix.image-tag }} --target test-update -t zephir-api2:test .
+
+        elif [[ "${{ matrix.update-strategy }}" == "update-clearn" ]]; then
+        
+        echo "Running normal test with updated dependencies"
+        docker build --build-arg IMAGE_TAG=${{ matrix.image-tag }} --target test-unlocked-install -t zephir-api2:test .
 
         fi
