@@ -47,6 +47,6 @@ jobs:
         elif [[ "${{ matrix.update-strategy }}" == "unpegged-install" ]]; then
         
         echo "Running normal test with updated dependencies"
-        docker build--no-cache --build-arg IMAGE_TAG=${{ matrix.image-tag }} --target test-unpegged-install -t zephir-api2:test .
+        docker build --no-cache --build-arg IMAGE_TAG=${{ matrix.image-tag }} --target test-unpegged-install -t zephir-api2:test .
 
         fi
