@@ -38,7 +38,7 @@ def get_database_uri():
     
     db_credentials_secret_name = os.getenv("DATABASE_CREDENTIALS_SECRET_NAME")
     if db_credentials_secret_name:
-        logger.info(f"Retrieving database credentials from Secrets Manager")
+        logger.info("Retrieving database credentials from Secrets Manager")
         secret = get_secret(db_credentials_secret_name)
         db_username = secret["username"]
         db_password = secret["password"]
