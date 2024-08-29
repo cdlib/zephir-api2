@@ -49,7 +49,7 @@ COPY . .
 # Run tests
 USER app
 RUN poetry run pytest tests
-RUN poetry show
+RUN poetry run pip list
 
 FROM build AS test-update
 # Install dev dependencies
@@ -59,7 +59,7 @@ COPY . .
 # Run tests
 USER app
 RUN poetry run pytest tests
-RUN poetry show
+RUN poetry run pip list
 
 FROM poetry AS build-unlocked-test
 COPY pyproject.toml ./
@@ -68,20 +68,16 @@ COPY . .
 # Run tests
 USER app
 RUN poetry run pytest tests
+RUN poetry run pip list
 
 FROM poetry AS build-latest-test
 COPY pyproject.toml ./ 
-RUN cat pyproject.toml
 RUN sed -i 's/\^/>=/g' pyproject.toml
-RUN cat pyproject.toml
 RUN poetry install --no-root && rm -rf ${POETRY_CACHE_DIR};
-RUN poetry show
 COPY . .
 # Run tests
 USER app
 RUN poetry run pytest tests
-RUN cat pyproject.toml
-RUN poetry show
 RUN poetry run pip list
 
 FROM base AS production

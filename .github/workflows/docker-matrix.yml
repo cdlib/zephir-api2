@@ -13,8 +13,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        image-tag: ['3.12-slim-bullseye']
-        update-strategy: [default, update, unlocked-install, latest-install]
+        image-tag: ['3.12-slim-bullseye', '3.13.0rc1-slim-bullseye']
+        update-strategy: [update, unlocked-install, latest-install]
 
     steps:
     - name: Checkout code
@@ -29,12 +29,7 @@ jobs:
     
     - name: Install and update dependencies
       run: |
-        if [[ "${{ matrix.update-strategy }}" == "default" ]]; then
-        
-        echo "Running normal test suite"
-        docker build --build-arg IMAGE_TAG=${{ matrix.image-tag }} --target test -t zephir-api2:test .
-        
-        elif [[ "${{ matrix.update-strategy }}" == "update" ]]; then
+        if [[ "${{ matrix.update-strategy }}" == "update" ]]; then
         
         echo "Running normal test with updated dependencies"
         docker build --no-cache --build-arg IMAGE_TAG=${{ matrix.image-tag }} --target test-update -t zephir-api2:test .
