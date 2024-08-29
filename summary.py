@@ -32,22 +32,28 @@ def get_job_logs(job_id):
     print(f"Failed to retrieve logs for job {job_id}: {response.status_code}, {response.text}")
     return None
 
-# Function to analyze logs for common issues
+# Function to analyze logs for meaningful issues
 def analyze_logs(log_content):
     issues = []
-    error_patterns = [
-        re.compile(r'error:', re.IGNORECASE),
-        re.compile(r'failed to', re.IGNORECASE),
-        re.compile(r'cannot find', re.IGNORECASE),
-        re.compile(r'exception:', re.IGNORECASE)
-    ]
-
-    for pattern in error_patterns:
-        matches = pattern.findall(log_content)
-        if matches:
-            issues.extend(matches)
     
-    return issues
+    # Improved patterns with context to capture meaningful lines
+    error_patterns = [
+        re.compile(r'.*error.*', re.IGNORECASE),
+        re.compile(r'.*failed to.*', re.IGNORECASE),
+        re.compile(r'.*cannot find.*', re.IGNORECASE),
+        re.compile(r'.*exception.*', re.IGNORECASE),
+        re.compile(r'.*critical.*', re.IGNORECASE),
+    ]
+    
+    log_lines = log_content.splitlines()
+    
+    for line in log_lines:
+        for pattern in error_patterns:
+            if pattern.search(line):
+                issues.append(line.strip())
+    
+    # Deduplicate the issues for clarity
+    return list(set(issues))
 
 # Function to summarize the issues based on the jobs
 def summarize_issues(jobs):
@@ -56,6 +62,10 @@ def summarize_issues(jobs):
         job_name = job['name']
         job_status = job['conclusion']
         job_id = job['id']
+
+        # Skip the generate-summary job
+        if "generate-summary" in job_name:
+            continue
 
         if job_status != "success":
             logs = get_job_logs(job_id)
