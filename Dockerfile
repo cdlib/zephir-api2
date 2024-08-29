@@ -75,6 +75,7 @@ RUN cat pyproject.toml
 RUN sed -i 's/\^/>=/g' pyproject.toml
 RUN cat pyproject.toml
 RUN poetry install --no-root && rm -rf ${POETRY_CACHE_DIR};
+RUN poetry show
 COPY . .
 # Run tests
 USER app
