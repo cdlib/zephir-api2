@@ -82,6 +82,7 @@ USER app
 RUN poetry run pytest tests
 RUN cat pyproject.toml
 RUN poetry show
+RUN poetry run pip list
 
 FROM base AS production
 RUN mkdir -p /venv && chown ${UID}:${GID} /venv
