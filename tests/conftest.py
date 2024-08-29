@@ -1,8 +1,9 @@
 import os
-import pytest
 import shutil
 
+import pytest
 from app import create_app
+
 
 @pytest.fixture
 def td_tmpdir(request, tmpdir):
@@ -55,7 +56,4 @@ def app(td_tmpdir):
 
 @pytest.fixture
 def client(app):
-    client = app.test_client()
-    yield client
-
-
+    return app.test_client()
