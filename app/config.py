@@ -23,7 +23,7 @@ def get_secret(secret_name):
             SecretId=secret_name
         )
     except ClientError as e:
-        logger.error(f"Failed to retrieve secret.")
+        logger.error("Failed to retrieve secret.")
         raise e
 
     secret = get_secret_value_response["SecretString"]
