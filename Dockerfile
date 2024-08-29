@@ -61,37 +61,24 @@ USER app
 RUN poetry run pytest tests
 RUN poetry show
 
-FROM build AS test-unlocked-install
-# Uninstall poetry and install it again
-RUN pip uninstall -y poetry
-# Remove poetry.lock and install dependencies
-RUN rm poetry.lock
-RUN pip install poetry
-RUN poetry install --no-root --without dev && rm -rf ${POETRY_CACHE_DIR};
-RUN poetry install --only dev --no-root && rm -rf ${POETRY_CACHE_DIR};
+FROM poetry AS build-unlocked-test
+COPY pyproject.toml ./
+RUN poetry install --no-root && rm -rf ${POETRY_CACHE_DIR};
 COPY . .
 # Run tests
 USER app
 RUN poetry run pytest tests
 
-FROM build AS test-unpegged-install
-# Uninstall poetry and install it again
-RUN pip uninstall -y poetry
-# Remove poetry.lock and install dependencies
-RUN rm poetry.lock
-## Substitute all numbers in pyproject.toml with *
+FROM poetry AS build-latest-test
+COPY pyproject.toml ./ 
 RUN sed -i 's/\^/>=/g' pyproject.toml
-# Print toml file
-RUN cat pyproject.toml
-RUN pip install poetry
-RUN poetry install --no-root --without dev && rm -rf ${POETRY_CACHE_DIR};
-RUN poetry install --only dev --no-root && rm -rf ${POETRY_CACHE_DIR};
+RUN poetry install --no-root && rm -rf ${POETRY_CACHE_DIR};
 COPY . .
 # Run tests
 USER app
 RUN poetry run pytest tests
+RUN cat pyproject.toml
 RUN poetry show
-
 
 FROM base AS production
 RUN mkdir -p /venv && chown ${UID}:${GID} /venv
