@@ -47,6 +47,7 @@ jobs:
         fi
   generate-summary:
     runs-on: ubuntu-latest
+    needs: Matrix
     if: always()
     steps:
     - name: Checkout code
