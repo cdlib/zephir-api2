@@ -2,24 +2,38 @@ import os
 import requests
 import re
 
+# GitHub environment variables
 GITHUB_TOKEN = os.getenv("GITHUB_TOKEN")
 REPO_OWNER = os.getenv("REPO_OWNER")
 REPO_NAME = os.getenv("REPO_NAME")
 WORKFLOW_RUN_ID = os.getenv("WORKFLOW_RUN_ID")
 
+# GitHub API headers
 headers = {
     "Authorization": f"Bearer {GITHUB_TOKEN}",
     "Accept": "application/vnd.github.v3+json",
 }
 
+# Function to retrieve all jobs for the current workflow run
 def get_jobs_for_run(run_id):
     url = f"https://api.github.com/repos/{REPO_OWNER}/{REPO_NAME}/actions/runs/{run_id}/jobs"
     response = requests.get(url, headers=headers)
     if response.status_code == 200:
         return response.json().get('jobs', [])
+    print(f"Failed to retrieve jobs: {response.status_code}, {response.text}")
     return []
 
-def analyze_logs(logs):
+# Function to retrieve the logs for a specific job
+def get_job_logs(job_id):
+    url = f"https://api.github.com/repos/{REPO_OWNER}/{REPO_NAME}/actions/jobs/{job_id}/logs"
+    response = requests.get(url, headers=headers)
+    if response.status_code == 200:
+        return response.text
+    print(f"Failed to retrieve logs for job {job_id}: {response.status_code}, {response.text}")
+    return None
+
+# Function to analyze logs for common issues
+def analyze_logs(log_content):
     issues = []
     error_patterns = [
         re.compile(r'error:', re.IGNORECASE),
@@ -29,27 +43,23 @@ def analyze_logs(logs):
     ]
 
     for pattern in error_patterns:
-        matches = pattern.findall(logs)
+        matches = pattern.findall(log_content)
         if matches:
             issues.extend(matches)
     
     return issues
 
+# Function to summarize the issues based on the jobs
 def summarize_issues(jobs):
     summary = {}
     for job in jobs:
-        if job['conclusion'] not in ['success', 'failure', 'cancelled']:
-            continue
-
         job_name = job['name']
         job_status = job['conclusion']
         job_id = job['id']
 
-        logs_url = job.get('logs_url')
-        if logs_url:
-            logs_response = requests.get(logs_url, headers=headers)
-            if logs_response.status_code == 200:
-                logs = logs_response.text
+        if job_status != "success":
+            logs = get_job_logs(job_id)
+            if logs:
                 issues = analyze_logs(logs)
                 summary[job_name] = {
                     "status": job_status,
@@ -63,11 +73,11 @@ def summarize_issues(jobs):
         else:
             summary[job_name] = {
                 "status": job_status,
-                "issues": ["No logs available."]
+                "issues": ["No issues, job succeeded."]
             }
-
     return summary
 
+# Function to generate the summary report
 def generate_summary_report(summary):
     report_lines = ["Test Summary Report:\n"]
     
@@ -86,12 +96,18 @@ def generate_summary_report(summary):
     
     return "\n".join(report_lines)
 
+# Main execution
 if __name__ == "__main__":
     jobs = get_jobs_for_run(WORKFLOW_RUN_ID)
-    summary = summarize_issues(jobs)
-    report = generate_summary_report(summary)
-    
-    with open("summary_report.txt", "w") as report_file:
-        report_file.write(report)
-    
-    print(report)
+    if not jobs:
+        print("No jobs found for the current workflow run.")
+    else:
+        summary = summarize_issues(jobs)
+        report = generate_summary_report(summary)
+        
+        # Save the report to a file
+        with open("summary_report.txt", "w") as report_file:
+            report_file.write(report)
+        
+        # Print the report to the console
+        print(report)
