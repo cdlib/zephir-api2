@@ -17,16 +17,15 @@ jobs:
         debian-version: ['bullseye', 'bookworm', 'latest']
         slim: [true, false]
         update-strategy: [update, unlocked-install, latest-install]
-
-      exclude:
-        # Current installation covered in CI job
-        - python-version: '3.12'
-          debian-version: 'bullseye'
-          slim: true
-        # Current deployment using slim, no need to test.
-        - python-version: '3.12'
-          debian-version: 'bullseye'
-          slim: false
+        exclude:
+          # Current installation covered in CI job
+          - python-version: '3.12'
+            debian-version: 'bullseye'
+            slim: true
+          # Current deployment using slim, no need to test.
+          - python-version: '3.12'
+            debian-version: 'bullseye'
+            slim: false
 
     steps:
     - name: Checkout code
