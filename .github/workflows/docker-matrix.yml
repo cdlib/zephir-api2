@@ -14,7 +14,7 @@ jobs:
       fail-fast: false
       matrix:
         image-tag: ['3.12-slim-bullseye', '3.13.0rc1', '3.13.0rc1-slim', 'latest']
-        update-strategy: [update, unlocked-install, latest-install]
+        update-strategy: [locked-install, unlocked-install, latest-install]
 
     steps:
     - name: Checkout code
@@ -29,10 +29,10 @@ jobs:
         echo "Image tag: ${{ matrix.image-tag }}"
         echo "Update strategy: ${{ matrix.update-strategy }}"
 
-        if [[ "${{ matrix.update-strategy }}" == "update" ]]; then
+        if [[ "${{ matrix.update-strategy }}" == "locked-install" ]]; then
         
         echo "Running normal test with updated dependencies"
-        docker build --no-cache --build-arg IMAGE_TAG=${{ matrix.image-tag }} --target test-update -t zephir-api2:test .
+        docker build --no-cache --build-arg IMAGE_TAG=${{ matrix.image-tag }} --target test -t zephir-api2:test .
 
         elif [[ "${{ matrix.update-strategy }}" == "unlocked-install" ]]; then
         

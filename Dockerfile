@@ -51,16 +51,6 @@ USER app
 RUN poetry run pytest tests
 RUN poetry run pip list
 
-FROM build AS test-update
-# Install dev dependencies
-RUN poetry install --only dev --no-root && rm -rf ${POETRY_CACHE_DIR};
-RUN poetry update
-COPY . .
-# Run tests
-USER app
-RUN poetry run pytest tests
-RUN poetry run pip list
-
 FROM poetry AS build-unlocked-test
 COPY pyproject.toml ./
 RUN poetry install --no-root && rm -rf ${POETRY_CACHE_DIR};
