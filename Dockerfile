@@ -71,7 +71,9 @@ RUN poetry run pytest tests
 
 FROM poetry AS build-latest-test
 COPY pyproject.toml ./ 
+RUN cat pyproject.toml
 RUN sed -i 's/\^/>=/g' pyproject.toml
+RUN cat pyproject.toml
 RUN poetry install --no-root && rm -rf ${POETRY_CACHE_DIR};
 COPY . .
 # Run tests
