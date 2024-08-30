@@ -107,11 +107,8 @@ def summarize_issues(jobs, workflow_id):
         job_status = job['conclusion']
         job_id = job['id']
 
-        print(f"Processing job: {job_name} with status: {job_status}")  # Debugging output
-
         # Skip the generate-summary job
         if "generate-summary" in job_name:
-            print(f"Skipping job: {job_name}")  # Debugging output
             continue
 
         logs = get_job_logs(job_id)

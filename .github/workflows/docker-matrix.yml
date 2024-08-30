@@ -13,7 +13,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        image-tag: ['latest']
+        image-tag: ['3.12-slim-bullseye', 'latest', '3.13.0rc1-slim-bullseye', '3.13.0rc1']
         update-strategy: [locked-install, unlocked-install, latest-install]
 
     steps:
