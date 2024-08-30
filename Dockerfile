@@ -21,7 +21,7 @@ RUN echo -n "OS: " && cat /etc/os-release
 # Print Debian version on the same line
 RUN echo -n "FULL OS VERSION: " && hostnamectl | grep "Operating System" | awk '{print $3}'
 # Print Python version on the same line
-RUN echo -n "LANGUAGE: " && poetry run python --version
+RUN echo -n "LANGUAGE: " && python --version
 
 RUN pip install poetry
 
