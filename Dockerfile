@@ -17,12 +17,14 @@ FROM base AS poetry
 
 # Print environment information
 RUN echo "--------ENVIRONMENT OUTPUT--------" && \
-    echo "ID: $(source /etc/os-release && echo $ID)" && \
-    echo "VERSION_ID: $(source /etc/os-release && echo $VERSION_ID)" && \
-    echo "VERSION_CODENAME: $(source /etc/os-release && echo $VERSION_CODENAME)" && \
+    . /etc/os-release && \
+    echo "ID: $ID" && \
+    echo "VERSION_ID: $VERSION_ID" && \
+    echo "VERSION_CODENAME: $VERSION_CODENAME" && \
     echo "FULL VERSION: $(cat /etc/debian_version)" && \
     echo "LANGUAGE VERSION: $(python --version 2>&1)" && \
     echo "--------ENVIRONMENT OUTPUT--------"
+
 
 
 RUN pip install poetry

@@ -41,7 +41,7 @@ def analyze_logs(log_content):
     python_version = None
     issues_found = False
     
-    # Simple patterns to capture actual output content
+    # Updated patterns to match the log format
     id_pattern = re.compile(r'^ID: (.+)')
     version_id_pattern = re.compile(r'^VERSION_ID: (.+)')
     version_codename_pattern = re.compile(r'^VERSION_CODENAME: (.+)')
