@@ -26,10 +26,8 @@ def get_jobs_for_run(run_id):
 # Function to retrieve the logs for a specific job
 def get_job_logs(job_id):
     url = f"https://api.github.com/repos/{REPO_OWNER}/{REPO_NAME}/actions/jobs/{job_id}/logs"
-    print(f"Retrieving logs from: {url}")  # Debugging output
     response = requests.get(url, headers=headers)
     if response.status_code == 200:
-        print("Logs retrieved successfully.")  # Debugging output
         return response.text
     else:
         print(f"Failed to retrieve logs for job {job_id}: {response.status_code}, {response.text}")  # Debugging output
@@ -69,7 +67,6 @@ def analyze_logs(log_content):
     
     for line in log_lines:
         line = line.strip()  # Remove leading/trailing spaces
-        print(f"Processing line: {line}")  # Debugging output
 
         if "--------ENVIRONMENT OUTPUT--------" in line:
             if in_environment_output:
@@ -80,28 +77,22 @@ def analyze_logs(log_content):
         if in_environment_output:
             if os_id is None and id_pattern.search(line):
                 os_id = id_pattern.search(line).group(1)
-                print(f"Captured ID: {os_id}")  # Debugging output
             
             if version_id is None and version_id_pattern.search(line):
                 version_id = version_id_pattern.search(line).group(1)
-                print(f"Captured VERSION_ID: {version_id}")  # Debugging output
             
             if version_codename is None and version_codename_pattern.search(line):
                 version_codename = version_codename_pattern.search(line).group(1)
-                print(f"Captured VERSION_CODENAME: {version_codename}")  # Debugging output
             
             if full_version is None and full_version_pattern.search(line):
                 full_version = full_version_pattern.search(line).group(1)
-                print(f"Captured FULL VERSION: {full_version}")  # Debugging output
             
             if python_version is None and python_version_pattern.search(line):
                 python_version = python_version_pattern.search(line).group(1)
-                print(f"Captured LANGUAGE VERSION: {python_version}")  # Debugging output
         
         for pattern in error_patterns:
             if pattern.search(line):
                 issues_found = True
-                print(f"Captured issue: {line}")  # Debugging output
                 break
     
     return os_id, version_id, version_codename, full_version, python_version, issues_found
