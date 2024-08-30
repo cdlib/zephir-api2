@@ -41,12 +41,12 @@ def analyze_logs(log_content):
     python_version = None
     issues_found = False
     
-    # Improved patterns to capture actual output content
-    id_pattern = re.compile(r'ID: (.+)')
-    version_id_pattern = re.compile(r'VERSION_ID: "?(.+?)"?')
-    version_codename_pattern = re.compile(r'VERSION_CODENAME: (.+)')
-    full_version_pattern = re.compile(r'FULL VERSION: (.+)')
-    python_version_pattern = re.compile(r'LANGUAGE VERSION: (.+)')
+    # Refined patterns to capture actual output content
+    id_pattern = re.compile(r'^#\d+ \d+\.\d+ ID: (.+)')
+    version_id_pattern = re.compile(r'^#\d+ \d+\.\d+ VERSION_ID: "?(.+?)"?')
+    version_codename_pattern = re.compile(r'^#\d+ \d+\.\d+ VERSION_CODENAME: (.+)')
+    full_version_pattern = re.compile(r'^#\d+ \d+\.\d+ FULL VERSION: (.+)')
+    python_version_pattern = re.compile(r'^#\d+ \d+\.\d+ LANGUAGE VERSION: (.+)')
     
     # Patterns to capture possible errors
     error_patterns = [
@@ -57,25 +57,34 @@ def analyze_logs(log_content):
         re.compile(r'.*critical.*', re.IGNORECASE),
     ]
     
+    # Flag to only start capturing after seeing the environment start marker
+    in_environment_output = False
     log_lines = log_content.splitlines()
     
     for line in log_lines:
         line = line.strip()  # Remove leading/trailing spaces
         
-        if os_id is None and id_pattern.search(line):
-            os_id = id_pattern.search(line).group(1)
+        if "--------ENVIRONMENT OUTPUT--------" in line:
+            if in_environment_output:
+                break  # Stop capturing after the end marker
+            in_environment_output = True
+            continue
         
-        if version_id is None and version_id_pattern.search(line):
-            version_id = version_id_pattern.search(line).group(1)
-        
-        if version_codename is None and version_codename_pattern.search(line):
-            version_codename = version_codename_pattern.search(line).group(1)
-        
-        if full_version is None and full_version_pattern.search(line):
-            full_version = full_version_pattern.search(line).group(1)
-        
-        if python_version is None and python_version_pattern.search(line):
-            python_version = python_version_pattern.search(line).group(1)
+        if in_environment_output:
+            if os_id is None and id_pattern.search(line):
+                os_id = id_pattern.search(line).group(1)
+            
+            if version_id is None and version_id_pattern.search(line):
+                version_id = version_id_pattern.search(line).group(1)
+            
+            if version_codename is None and version_codename_pattern.search(line):
+                version_codename = version_codename_pattern.search(line).group(1)
+            
+            if full_version is None and full_version_pattern.search(line):
+                full_version = full_version_pattern.search(line).group(1)
+            
+            if python_version is None and python_version_pattern.search(line):
+                python_version = python_version_pattern.search(line).group(1)
         
         for pattern in error_patterns:
             if pattern.search(line):
