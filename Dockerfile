@@ -46,6 +46,7 @@ USER app
 RUN poetry run pytest tests
 # Print environment information
 RUN echo $IMAGE_TAG
+RUN cat /etc/debian_version
 RUN poetry run python --version
 RUN poetry run pip list
 
@@ -58,6 +59,7 @@ USER app
 RUN poetry run pytest tests
 # Print environment information
 RUN echo $IMAGE_TAG
+RUN cat /etc/debian_version
 RUN poetry run python --version
 RUN poetry run pip list
 
@@ -71,6 +73,7 @@ USER app
 RUN poetry run pytest tests
 # Print environment information
 RUN echo $IMAGE_TAG
+RUN cat /etc/debian_version
 RUN poetry run python --version
 RUN poetry run pip list
 

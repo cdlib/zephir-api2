@@ -32,41 +32,36 @@ def get_job_logs(job_id):
     print(f"Failed to retrieve logs for job {job_id}: {response.status_code}, {response.text}")
     return None
 
-# Function to analyze logs for meaningful issues
+# Function to analyze logs for Python version and pip packages
 def analyze_logs(log_content):
-    issues = []
     python_version = None
     pip_packages = []
-
-    # Improved patterns with context to capture meaningful lines
-    error_patterns = [
-        re.compile(r'.*error.*', re.IGNORECASE),
-        re.compile(r'.*failed to.*', re.IGNORECASE),
-        re.compile(r'.*cannot find.*', re.IGNORECASE),
-        re.compile(r'.*exception.*', re.IGNORECASE),
-        re.compile(r'.*critical.*', re.IGNORECASE),
-    ]
-
-    # Patterns to capture Python version and pip packages
-    python_version_pattern = re.compile(r'Python \d+\.\d+\.\d+')
-    pip_list_pattern = re.compile(r'^\s*\S+\s+\S+\s*$')
+    issues = []
 
     log_lines = log_content.splitlines()
 
+    # Regex patterns to identify Python version and pip list
+    python_version_pattern = re.compile(r'^#\d+ \[.*\] RUN.*python --version.*\n#\d+ \d+\.\d+ Python (\d+\.\d+\.\d+)', re.MULTILINE)
+    pip_list_start_pattern = re.compile(r'^#\d+ \[.*\] RUN.*pip list.*', re.MULTILINE)
+    pip_package_pattern = re.compile(r'^#\d+ \d+\.\d+ (\S+)\s+(\S+)$', re.MULTILINE)
+
+    # Search for Python version
+    python_version_match = python_version_pattern.search(log_content)
+    if python_version_match:
+        python_version = python_version_match.group(1)
+
+    # Search for pip list and packages
+    pip_list_started = False
     for line in log_lines:
-        if not python_version and python_version_pattern.search(line):
-            python_version = line.strip()
-        elif pip_list_pattern.search(line):
-            pip_packages.append(line.strip())
+        if pip_list_start_pattern.match(line):
+            pip_list_started = True
+            continue
+        if pip_list_started:
+            package_match = pip_package_pattern.match(line)
+            if package_match:
+                pip_packages.append(f"{package_match.group(1)} {package_match.group(2)}")
 
-        for pattern in error_patterns:
-            if pattern.search(line):
-                issues.append(line.strip())
-
-    # Deduplicate the issues for clarity
-    issues = list(set(issues))
-
-    return issues, python_version, pip_packages
+    return python_version, pip_packages, issues
 
 # Function to summarize the issues based on the jobs
 def summarize_issues(jobs):
@@ -83,7 +78,7 @@ def summarize_issues(jobs):
         if job_status != "success":
             logs = get_job_logs(job_id)
             if logs:
-                issues, python_version, pip_packages = analyze_logs(logs)
+                python_version, pip_packages, issues = analyze_logs(logs)
                 summary[job_name] = {
                     "status": job_status,
                     "python_version": python_version,
@@ -110,10 +105,10 @@ def generate_summary_report(summary):
         report_lines.append(f"Job: {job}")
         report_lines.append(f"Status: {details['status']}")
 
-        if 'python_version' in details and details['python_version']:
+        if details.get("python_version"):
             report_lines.append(f"Python Version: {details['python_version']}")
 
-        if 'pip_packages' in details and details['pip_packages']:
+        if details.get("pip_packages"):
             report_lines.append("Installed Pip Packages:")
             for package in details['pip_packages']:
                 report_lines.append(f"- {package}")
