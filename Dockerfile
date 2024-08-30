@@ -44,17 +44,17 @@ COPY . .
 # Run tests
 USER app
 RUN poetry run pytest tests
-# Print environment information
-RUN echo -n "Environment information: " && cat /etc/os-release | grep PRETTY_NAME
 
+# Print environment information
+RUN echo -n "--------START ENVIRONMENT OUTPUT--------"
+RUN echo -n "OS: " && cat /etc/os-release
 # Print Debian version on the same line
 RUN echo -n "Debian Version: " && cat /etc/debian_version
-
 # Print Python version on the same line
-RUN echo -n "Python Version: " && poetry run python --version
-
+RUN echo -n "LANGUAGE: " && poetry run python --version
 # Print Python dependencies on the same line with the list starting right after the title
-RUN echo "Python Dependencies:" && poetry run pip list
+RUN echo "DEPENDENCIES:" && poetry run pip list
+RUN echo -n "--------END ENVIRONMENT OUTPUT--------"
 
 FROM poetry AS build-unlocked-test
 COPY pyproject.toml ./
@@ -63,17 +63,17 @@ COPY . .
 # Run tests
 USER app
 RUN poetry run pytest tests
-# Print environment information
-RUN echo -n "Environment information: " && cat /etc/os-release | grep PRETTY_NAME
 
+# Print environment information
+RUN echo -n "--------START ENVIRONMENT OUTPUT--------"
+RUN echo -n "OS: " && cat /etc/os-release
 # Print Debian version on the same line
 RUN echo -n "Debian Version: " && cat /etc/debian_version
-
 # Print Python version on the same line
-RUN echo -n "Python Version: " && poetry run python --version
-
+RUN echo -n "LANGUAGE: " && poetry run python --version
 # Print Python dependencies on the same line with the list starting right after the title
-RUN echo "Python Dependencies:" && poetry run pip list
+RUN echo "DEPENDENCIES:" && poetry run pip list
+RUN echo -n "--------END ENVIRONMENT OUTPUT--------"
 
 FROM poetry AS build-latest-test
 COPY pyproject.toml ./ 
@@ -83,17 +83,17 @@ COPY . .
 # Run tests
 USER app
 RUN poetry run pytest tests
-# Print environment information
-RUN echo -n "Environment information: " && cat /etc/os-release | grep PRETTY_NAME
 
+# Print environment information
+RUN echo -n "--------START ENVIRONMENT OUTPUT--------"
+RUN echo -n "OS: " && cat /etc/os-release
 # Print Debian version on the same line
 RUN echo -n "Debian Version: " && cat /etc/debian_version
-
 # Print Python version on the same line
-RUN echo -n "Python Version: " && poetry run python --version
-
+RUN echo -n "LANGUAGE: " && poetry run python --version
 # Print Python dependencies on the same line with the list starting right after the title
-RUN echo "Python Dependencies:" && poetry run pip list
+RUN echo "DEPENDENCIES:" && poetry run pip list
+RUN echo -n "--------END ENVIRONMENT OUTPUT--------"
 
 
 FROM base AS production
