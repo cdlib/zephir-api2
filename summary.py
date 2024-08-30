@@ -45,7 +45,7 @@ def analyze_logs(log_content):
     python_version = None
     issues_found = False
     
-    # Updated patterns to match the log format
+    # Simplified patterns to match the log format exactly
     id_pattern = re.compile(r'^ID: (.+)')
     version_id_pattern = re.compile(r'^VERSION_ID: (.+)')
     version_codename_pattern = re.compile(r'^VERSION_CODENAME: (.+)')
@@ -67,7 +67,8 @@ def analyze_logs(log_content):
     
     for line in log_lines:
         line = line.strip()  # Remove leading/trailing spaces
-        
+        print(f"Processing line: {line}")  # Debugging output
+
         if "--------ENVIRONMENT OUTPUT--------" in line:
             if in_environment_output:
                 break  # Stop capturing after the end marker
@@ -75,8 +76,6 @@ def analyze_logs(log_content):
             continue
         
         if in_environment_output:
-            print(f"Processing line: {line}")  # Debugging output
-            
             if os_id is None and id_pattern.search(line):
                 os_id = id_pattern.search(line).group(1)
                 print(f"Captured ID: {os_id}")  # Debugging output
