@@ -71,27 +71,36 @@ def analyze_logs(log_content):
             continue
         
         if in_environment_output:
+            print(f"Processing line: {line}")  # Debugging output
+            
             if os_id is None and id_pattern.search(line):
                 os_id = id_pattern.search(line).group(1)
+                print(f"Captured ID: {os_id}")  # Debugging output
             
             if version_id is None and version_id_pattern.search(line):
                 version_id = version_id_pattern.search(line).group(1)
+                print(f"Captured VERSION_ID: {version_id}")  # Debugging output
             
             if version_codename is None and version_codename_pattern.search(line):
                 version_codename = version_codename_pattern.search(line).group(1)
+                print(f"Captured VERSION_CODENAME: {version_codename}")  # Debugging output
             
             if full_version is None and full_version_pattern.search(line):
                 full_version = full_version_pattern.search(line).group(1)
+                print(f"Captured FULL VERSION: {full_version}")  # Debugging output
             
             if python_version is None and python_version_pattern.search(line):
                 python_version = python_version_pattern.search(line).group(1)
+                print(f"Captured LANGUAGE VERSION: {python_version}")  # Debugging output
         
         for pattern in error_patterns:
             if pattern.search(line):
                 issues_found = True
+                print(f"Captured issue: {line}")  # Debugging output
                 break
     
     return os_id, version_id, version_codename, full_version, python_version, issues_found
+
 
 # Function to summarize the issues based on the jobs
 def summarize_issues(jobs):
