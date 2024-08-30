@@ -192,7 +192,7 @@ if __name__ == "__main__":
     if not jobs:
         print("No jobs found for the current workflow run.")
     else:
-        summary = summarize_issues(jobs)
+        summary = summarize_issues(jobs, WORKFLOW_RUN_ID
         report = generate_simplified_summary_report(summary)
         
         # Save the report to a file
