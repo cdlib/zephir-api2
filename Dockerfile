@@ -72,9 +72,12 @@ COPY . .
 USER app
 RUN poetry run pytest tests
 # Print environment information
-RUN echo $IMAGE_TAG
+RUN echo "Environment information:"
+RUN echo "Debian Version:"
 RUN cat /etc/debian_version
+RUN echo "Python Version:"
 RUN poetry run python --version
+RUN echo "Python Dependecies"
 RUN poetry run pip list
 
 FROM base AS production
