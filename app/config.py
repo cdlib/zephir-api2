@@ -6,10 +6,13 @@ import boto3
 from botocore.exceptions import ClientError
 
 
+LOG_FORMAT = "[%(asctime)s] [%(levelname)s] [%(name)s] %(message)s"
+DATE_FORMAT = "%Y-%m-%d %H:%M:%S %z"
+
 logging.basicConfig(
     level=logging.INFO,
-    format="[%(asctime)s] [%(levelname)s] [%(name)s] %(message)s",
-    datefmt="%Y-%m-%d %H:%M:%S %z"
+    format=LOG_FORMAT,
+    datefmt=DATE_FORMAT
 )
 
 logger = logging.getLogger(__name__)
@@ -63,6 +66,5 @@ class Config:
     SQLALCHEMY_DATABASE_URI = get_database_uri()
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SQLALCHEMY_ENGINE_OPTIONS = {
-        "pool_pre_ping": True,
-        "echo": os.getenv("FLASK_ENV") != "production"
+        "pool_pre_ping": True
     }
