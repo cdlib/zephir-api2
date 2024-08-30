@@ -14,6 +14,15 @@ WORKDIR /app
 
 # Both build and development need poetry, so it is its own step.
 FROM base AS poetry
+
+# Print environment information
+RUN echo -n "--------START ENVIRONMENT OUTPUT--------"
+RUN echo -n "OS: " && cat /etc/os-release
+# Print Debian version on the same line
+RUN echo -n "FULL OS VERSION: " && hostnamectl | grep "Operating System" | awk '{print $3}'
+# Print Python version on the same line
+RUN echo -n "LANGUAGE: " && poetry run python --version
+
 RUN pip install poetry
 
 # Use this page as a reference for python and poetry environment variables:
@@ -40,60 +49,33 @@ RUN poetry install --no-root --without dev && rm -rf ${POETRY_CACHE_DIR};
 FROM build AS test
 # Install dev dependencies
 RUN poetry install --only dev --no-root && rm -rf ${POETRY_CACHE_DIR};
+# Print Python dependencies on the same line with the list starting right after the title
+RUN echo "--------DEPENDENCIES---------" && poetry run pip list && echo "--------DEPENDENCIES---------"
 COPY . .
 # Run tests
 USER app
 RUN poetry run pytest tests
 
-# Print environment information
-RUN echo -n "--------START ENVIRONMENT OUTPUT--------"
-RUN echo -n "OS: " && cat /etc/os-release
-# Print Debian version on the same line
-RUN echo -n "Debian Version: " && cat /etc/debian_version
-# Print Python version on the same line
-RUN echo -n "LANGUAGE: " && poetry run python --version
-# Print Python dependencies on the same line with the list starting right after the title
-RUN echo "DEPENDENCIES:" && poetry run pip list
-RUN echo -n "--------END ENVIRONMENT OUTPUT--------"
 
 FROM poetry AS build-unlocked-test
 COPY pyproject.toml ./
 RUN poetry install --no-root && rm -rf ${POETRY_CACHE_DIR};
+RUN echo "--------DEPENDENCIES---------" && poetry run pip list && echo "--------DEPENDENCIES---------"
 COPY . .
 # Run tests
 USER app
 RUN poetry run pytest tests
 
-# Print environment information
-RUN echo -n "--------START ENVIRONMENT OUTPUT--------"
-RUN echo -n "OS: " && cat /etc/os-release
-# Print Debian version on the same line
-RUN echo -n "Debian Version: " && cat /etc/debian_version
-# Print Python version on the same line
-RUN echo -n "LANGUAGE: " && poetry run python --version
-# Print Python dependencies on the same line with the list starting right after the title
-RUN echo "DEPENDENCIES:" && poetry run pip list
-RUN echo -n "--------END ENVIRONMENT OUTPUT--------"
 
 FROM poetry AS build-latest-test
 COPY pyproject.toml ./ 
 RUN sed -i 's/\^/>=/g' pyproject.toml
 RUN poetry install --no-root && rm -rf ${POETRY_CACHE_DIR};
+RUN echo "--------DEPENDENCIES---------" && poetry run pip list && echo "--------DEPENDENCIES---------"
 COPY . .
 # Run tests
 USER app
 RUN poetry run pytest tests
-
-# Print environment information
-RUN echo -n "--------START ENVIRONMENT OUTPUT--------"
-RUN echo -n "OS: " && cat /etc/os-release
-# Print Debian version on the same line
-RUN echo -n "Debian Version: " && cat /etc/debian_version
-# Print Python version on the same line
-RUN echo -n "LANGUAGE: " && poetry run python --version
-# Print Python dependencies on the same line with the list starting right after the title
-RUN echo "DEPENDENCIES:" && poetry run pip list
-RUN echo -n "--------END ENVIRONMENT OUTPUT--------"
 
 
 FROM base AS production
