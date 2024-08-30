@@ -32,17 +32,23 @@ def get_job_logs(job_id):
     print(f"Failed to retrieve logs for job {job_id}: {response.status_code}, {response.text}")
     return None
 
-# Function to analyze logs for meaningful information
+# Function to analyze logs for environment and issue information
 def analyze_logs(log_content):
-    issues = []
-    os_version = None
+    os_id = None
+    version_id = None
+    version_codename = None
+    full_version = None
     python_version = None
+    issues_found = False
     
-    # Patterns to capture OS version and Python version
-    os_version_pattern = re.compile(r'^#\d+ \d+\.\d+ PRETTY_NAME="(.+)"')
-    python_version_pattern = re.compile(r'^#\d+ \d+\.\d+ Python (\d+\.\d+\.\d+)')
+    # Patterns to capture specific environment information
+    id_pattern = re.compile(r'^#\d+\.\d+ ID: (.+)')
+    version_id_pattern = re.compile(r'^#\d+\.\d+ VERSION_ID: (.+)')
+    version_codename_pattern = re.compile(r'^#\d+\.\d+ VERSION_CODENAME: (.+)')
+    full_version_pattern = re.compile(r'^#\d+\.\d+ FULL VERSION: (.+)')
+    python_version_pattern = re.compile(r'^#\d+\.\d+ LANGUAGE VERSION: (.+)')
     
-    # Improved patterns with context to capture meaningful lines
+    # Patterns to capture possible errors
     error_patterns = [
         re.compile(r'.*error.*', re.IGNORECASE),
         re.compile(r'.*failed to.*', re.IGNORECASE),
@@ -54,20 +60,27 @@ def analyze_logs(log_content):
     log_lines = log_content.splitlines()
     
     for line in log_lines:
-        if os_version is None and os_version_pattern.search(line):
-            os_version = os_version_pattern.search(line).group(1)
+        if os_id is None and id_pattern.search(line):
+            os_id = id_pattern.search(line).group(1)
+        
+        if version_id is None and version_id_pattern.search(line):
+            version_id = version_id_pattern.search(line).group(1)
+        
+        if version_codename is None and version_codename_pattern.search(line):
+            version_codename = version_codename_pattern.search(line).group(1)
+        
+        if full_version is None and full_version_pattern.search(line):
+            full_version = full_version_pattern.search(line).group(1)
         
         if python_version is None and python_version_pattern.search(line):
             python_version = python_version_pattern.search(line).group(1)
         
         for pattern in error_patterns:
             if pattern.search(line):
-                issues.append(line.strip())
+                issues_found = True
+                break
     
-    # Deduplicate the issues for clarity
-    issues = list(set(issues))
-    
-    return issues, os_version, python_version
+    return os_id, version_id, version_codename, full_version, python_version, issues_found
 
 # Function to summarize the issues based on the jobs
 def summarize_issues(jobs):
@@ -81,54 +94,58 @@ def summarize_issues(jobs):
         if "generate-summary" in job_name:
             continue
 
-        if job_status != "success":
-            logs = get_job_logs(job_id)
-            if logs:
-                issues, os_version, python_version = analyze_logs(logs)
-                summary[job_name] = {
-                    "status": job_status,
-                    "os_version": os_version,
-                    "python_version": python_version,
-                    "issues": issues or ["No specific issues found, general failure."]
-                }
-            else:
-                summary[job_name] = {
-                    "status": job_status,
-                    "issues": ["Failed to retrieve logs."]
-                }
-        else:
-            logs = get_job_logs(job_id)
-            if logs:
-                _, os_version, python_version = analyze_logs(logs)
+        logs = get_job_logs(job_id)
+        if logs:
+            os_id, version_id, version_codename, full_version, python_version, issues_found = analyze_logs(logs)
             summary[job_name] = {
                 "status": job_status,
-                "os_version": os_version,
+                "os_id": os_id,
+                "version_id": version_id,
+                "version_codename": version_codename,
+                "full_version": full_version,
                 "python_version": python_version,
-                "issues": ["No issues, job succeeded."]
+                "issues_found": issues_found
             }
+        else:
+            summary[job_name] = {
+                "status": job_status,
+                "os_id": None,
+                "version_id": None,
+                "version_codename": None,
+                "full_version": None,
+                "python_version": None,
+                "issues_found": False,
+            }
+            
     return summary
 
-# Function to generate the summary report
-def generate_summary_report(summary):
+# Function to generate the simplified summary report
+def generate_simplified_summary_report(summary):
     report_lines = ["Test Summary Report:\n"]
     
     for job, details in summary.items():
         report_lines.append(f"Job: {job}")
         report_lines.append(f"Status: {details['status']}")
         
-        if details.get('os_version'):
-            report_lines.append(f"OS Version: {details['os_version']}")
+        if details.get('os_id'):
+            report_lines.append(f"ID: {details['os_id']}")
+        
+        if details.get('version_id'):
+            report_lines.append(f"VERSION_ID: {details['version_id']}")
+        
+        if details.get('version_codename'):
+            report_lines.append(f"VERSION_CODENAME: {details['version_codename']}")
+        
+        if details.get('full_version'):
+            report_lines.append(f"FULL VERSION: {details['full_version']}")
         
         if details.get('python_version'):
-            report_lines.append(f"Python Version: {details['python_version']}")
+            report_lines.append(f"LANGUAGE VERSION: {details['python_version']}")
         
         if details['status'] != "success":
-            report_lines.append("Issues Found:")
-            for issue in details['issues']:
-                report_lines.append(f"- {issue}")
+            report_lines.append("Issues Found: Yes")
         else:
-            # Combine success status with no issues message
-            report_lines[-1] += " - No issues, job succeeded."
+            report_lines.append("Issues Found: No")
         
         report_lines.append("\n" + "-"*40 + "\n")
     
@@ -141,7 +158,7 @@ if __name__ == "__main__":
         print("No jobs found for the current workflow run.")
     else:
         summary = summarize_issues(jobs)
-        report = generate_summary_report(summary)
+        report = generate_simplified_summary_report(summary)
         
         # Save the report to a file
         with open("summary_report.txt", "w") as report_file:
