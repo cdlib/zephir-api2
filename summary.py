@@ -37,6 +37,8 @@ def get_job_logs(job_id):
 
 
 # Function to analyze logs for environment and issue information
+import re
+
 def analyze_logs(log_content):
     os_id = None
     version_id = None
@@ -45,12 +47,12 @@ def analyze_logs(log_content):
     python_version = None
     issues_found = False
     
-    # Simplified patterns to match the log format
-    id_pattern = re.compile(r'.*ID: (.+)')
-    version_id_pattern = re.compile(r'.*VERSION_ID: (.+)')
-    version_codename_pattern = re.compile(r'.*VERSION_CODENAME: (.+)')
-    full_version_pattern = re.compile(r'.*FULL VERSION: (.+)')
-    python_version_pattern = re.compile(r'.*LANGUAGE VERSION: (.+)')
+    # Updated patterns to match the log format
+    id_pattern = re.compile(r'.*ENV_OUTPUT_ID: (.+)')
+    version_id_pattern = re.compile(r'.*ENV_OUTPUT_VERSION_ID: (.+)')
+    version_codename_pattern = re.compile(r'.*ENV_OUTPUT_VERSION_CODENAME: (.+)')
+    full_version_pattern = re.compile(r'.*ENV_OUTPUT_FULL_VERSION: (.+)')
+    python_version_pattern = re.compile(r'.*ENV_OUTPUT_LANGUAGE_VERSION: (.+)')
     
     # Patterns to capture possible errors
     error_patterns = [
@@ -61,7 +63,7 @@ def analyze_logs(log_content):
         re.compile(r'.*critical.*', re.IGNORECASE),
     ]
     
-    # Flag to only start capturing after seeing the environment start marker
+    # Flag to start capturing after seeing the environment start marker
     in_environment_output = False
     log_lines = log_content.splitlines()
     
