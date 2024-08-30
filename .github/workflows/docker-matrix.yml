@@ -69,8 +69,7 @@ jobs:
         REPO_NAME: ${{ github.event.repository.name }}
         WORKFLOW_RUN_ID: ${{ github.run_id }}
       run: |
-        python summary.py > summary_report.txt
-        cat summary_report.txt
+        python summary.py
 
     # - name: Upload Summary Report Artifact
     #   uses: actions/upload-artifact@v3
