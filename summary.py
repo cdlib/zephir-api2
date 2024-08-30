@@ -109,7 +109,7 @@ def analyze_logs(log_content):
 
 
 # Function to summarize the issues based on the jobs
-def summarize_issues(jobs):
+def summarize_issues(jobs, workflow_id):
     summary = {}
     for job in jobs:
         job_name = job['name']
@@ -128,6 +128,8 @@ def summarize_issues(jobs):
             print(f"Logs found for job: {job_name}, analyzing...")  # Debugging output
             os_id, version_id, version_codename, full_version, python_version, issues_found = analyze_logs(logs)
             summary[job_name] = {
+                "workflow_id": workflow_id,  # Add workflow_id to the summary
+                "job_id": job_id,            # Add job_id to the summary
                 "status": job_status,
                 "os_id": os_id,
                 "version_id": version_id,
@@ -140,6 +142,8 @@ def summarize_issues(jobs):
         else:
             print(f"No logs found for job: {job_name}, setting default values.")  # Debugging output
             summary[job_name] = {
+                "workflow_id": workflow_id,  # Add workflow_id to the summary
+                "job_id": job_id,            # Add job_id to the summary
                 "status": job_status,
                 "os_id": None,
                 "version_id": None,
@@ -150,6 +154,7 @@ def summarize_issues(jobs):
             }
 
     return summary
+
 
 
 # Function to generate the simplified summary report
