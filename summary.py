@@ -45,12 +45,12 @@ def analyze_logs(log_content):
     python_version = None
     issues_found = False
     
-    # Simplified patterns to match the log format exactly
-    id_pattern = re.compile(r'^ID: (.+)')
-    version_id_pattern = re.compile(r'^VERSION_ID: (.+)')
-    version_codename_pattern = re.compile(r'^VERSION_CODENAME: (.+)')
-    full_version_pattern = re.compile(r'^FULL VERSION: (.+)')
-    python_version_pattern = re.compile(r'^LANGUAGE VERSION: (.+)')
+    # Simplified patterns to match the log format
+    id_pattern = re.compile(r'.*ID: (.+)')
+    version_id_pattern = re.compile(r'.*VERSION_ID: (.+)')
+    version_codename_pattern = re.compile(r'.*VERSION_CODENAME: (.+)')
+    full_version_pattern = re.compile(r'.*FULL VERSION: (.+)')
+    python_version_pattern = re.compile(r'.*LANGUAGE VERSION: (.+)')
     
     # Patterns to capture possible errors
     error_patterns = [
@@ -103,6 +103,7 @@ def analyze_logs(log_content):
                 break
     
     return os_id, version_id, version_codename, full_version, python_version, issues_found
+
 
 
 # Function to summarize the issues based on the jobs
