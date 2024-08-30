@@ -16,6 +16,7 @@ WORKDIR /app
 FROM base AS poetry
 
 # Print environment information
+COPY print_env.py .
 RUN python print_env.py
 
 RUN pip install poetry
