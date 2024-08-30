@@ -16,12 +16,9 @@ WORKDIR /app
 FROM base AS poetry
 
 # Print environment information
-RUN echo -n "--------START ENVIRONMENT OUTPUT--------"
-RUN echo -n "OS: " && cat /etc/os-release
-# Print Debian version on the same line
-RUN echo -n "FULL OS VERSION: " && hostnamectl | grep "Operating System" | awk '{print $3}'
-# Print Python version on the same line
-RUN echo -n "LANGUAGE: " && python --version
+RUN echo -n "--------ENVIRONMENT OUTPUT--------"
+RUN grep -E '^ID=|^VERSION_ID=|^VERSION_CODENAME=' /etc/os-release | awk -F= '{print $1 ": " $2}' && echo -n "FULL VERSION: " && cat /etc/debian_version && echo -n "LANGUAGE VERSION: " && python --version
+RUN echo -n "-------- ENVIRONMENT OUTPUT--------"
 
 RUN pip install poetry
 
