@@ -142,10 +142,7 @@ def generate_simplified_summary_report(summary):
         if details.get('python_version'):
             report_lines.append(f"LANGUAGE VERSION: {details['python_version']}")
         
-        if details['status'] != "success":
-            report_lines.append("Issues Found: Yes")
-        else:
-            report_lines.append("Issues Found: No")
+        report_lines.append(f"Issues Found: {'Yes' if details['issues_found'] else 'No'}")
         
         report_lines.append("\n" + "-"*40 + "\n")
     
