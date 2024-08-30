@@ -26,11 +26,15 @@ def get_jobs_for_run(run_id):
 # Function to retrieve the logs for a specific job
 def get_job_logs(job_id):
     url = f"https://api.github.com/repos/{REPO_OWNER}/{REPO_NAME}/actions/jobs/{job_id}/logs"
+    print(f"Retrieving logs from: {url}")  # Debugging output
     response = requests.get(url, headers=headers)
     if response.status_code == 200:
+        print("Logs retrieved successfully.")  # Debugging output
         return response.text
-    print(f"Failed to retrieve logs for job {job_id}: {response.status_code}, {response.text}")
+    else:
+        print(f"Failed to retrieve logs for job {job_id}: {response.status_code}, {response.text}")  # Debugging output
     return None
+
 
 # Function to analyze logs for environment and issue information
 def analyze_logs(log_content):
@@ -110,12 +114,16 @@ def summarize_issues(jobs):
         job_status = job['conclusion']
         job_id = job['id']
 
+        print(f"Processing job: {job_name} with status: {job_status}")  # Debugging output
+
         # Skip the generate-summary job
         if "generate-summary" in job_name:
+            print(f"Skipping job: {job_name}")  # Debugging output
             continue
 
         logs = get_job_logs(job_id)
         if logs:
+            print(f"Logs found for job: {job_name}, analyzing...")  # Debugging output
             os_id, version_id, version_codename, full_version, python_version, issues_found = analyze_logs(logs)
             summary[job_name] = {
                 "status": job_status,
@@ -126,7 +134,9 @@ def summarize_issues(jobs):
                 "python_version": python_version,
                 "issues_found": issues_found
             }
+            print(f"Summary for job {job_name}: {summary[job_name]}")  # Debugging output
         else:
+            print(f"No logs found for job: {job_name}, setting default values.")  # Debugging output
             summary[job_name] = {
                 "status": job_status,
                 "os_id": None,
@@ -136,8 +146,9 @@ def summarize_issues(jobs):
                 "python_version": None,
                 "issues_found": False,
             }
-            
+
     return summary
+
 
 # Function to generate the simplified summary report
 def generate_simplified_summary_report(summary):
