@@ -45,10 +45,16 @@ COPY . .
 USER app
 RUN poetry run pytest tests
 # Print environment information
-RUN echo $IMAGE_TAG
-RUN cat /etc/debian_version
-RUN poetry run python --version
-RUN poetry run pip list
+RUN echo -n "Environment information: " && cat /etc/os-release | grep PRETTY_NAME
+
+# Print Debian version on the same line
+RUN echo -n "Debian Version: " && cat /etc/debian_version
+
+# Print Python version on the same line
+RUN echo -n "Python Version: " && poetry run python --version
+
+# Print Python dependencies on the same line with the list starting right after the title
+RUN echo "Python Dependencies:" && poetry run pip list
 
 FROM poetry AS build-unlocked-test
 COPY pyproject.toml ./
@@ -58,10 +64,16 @@ COPY . .
 USER app
 RUN poetry run pytest tests
 # Print environment information
-RUN echo $IMAGE_TAG
-RUN cat /etc/debian_version
-RUN poetry run python --version
-RUN poetry run pip list
+RUN echo -n "Environment information: " && cat /etc/os-release | grep PRETTY_NAME
+
+# Print Debian version on the same line
+RUN echo -n "Debian Version: " && cat /etc/debian_version
+
+# Print Python version on the same line
+RUN echo -n "Python Version: " && poetry run python --version
+
+# Print Python dependencies on the same line with the list starting right after the title
+RUN echo "Python Dependencies:" && poetry run pip list
 
 FROM poetry AS build-latest-test
 COPY pyproject.toml ./ 
@@ -72,13 +84,17 @@ COPY . .
 USER app
 RUN poetry run pytest tests
 # Print environment information
-RUN echo "Environment information:"
-RUN echo "Debian Version:"
-RUN cat /etc/debian_version
-RUN echo "Python Version:"
-RUN poetry run python --version
-RUN echo "Python Dependecies"
-RUN poetry run pip list
+RUN echo -n "Environment information: " && cat /etc/os-release | grep PRETTY_NAME
+
+# Print Debian version on the same line
+RUN echo -n "Debian Version: " && cat /etc/debian_version
+
+# Print Python version on the same line
+RUN echo -n "Python Version: " && poetry run python --version
+
+# Print Python dependencies on the same line with the list starting right after the title
+RUN echo "Python Dependencies:" && poetry run pip list
+
 
 FROM base AS production
 RUN mkdir -p /venv && chown ${UID}:${GID} /venv
