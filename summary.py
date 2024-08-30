@@ -41,12 +41,12 @@ def analyze_logs(log_content):
     python_version = None
     issues_found = False
     
-    # Corrected patterns to capture actual output content
-    id_pattern = re.compile(r'^ID: (.+)')
-    version_id_pattern = re.compile(r'^VERSION_ID: "(.+)"')
-    version_codename_pattern = re.compile(r'^VERSION_CODENAME: (.+)')
-    full_version_pattern = re.compile(r'^FULL VERSION: (.+)')
-    python_version_pattern = re.compile(r'^LANGUAGE VERSION: (.+)')
+    # Improved patterns to capture actual output content
+    id_pattern = re.compile(r'ID: (.+)')
+    version_id_pattern = re.compile(r'VERSION_ID: "?(.+?)"?')
+    version_codename_pattern = re.compile(r'VERSION_CODENAME: (.+)')
+    full_version_pattern = re.compile(r'FULL VERSION: (.+)')
+    python_version_pattern = re.compile(r'LANGUAGE VERSION: (.+)')
     
     # Patterns to capture possible errors
     error_patterns = [
@@ -60,6 +60,8 @@ def analyze_logs(log_content):
     log_lines = log_content.splitlines()
     
     for line in log_lines:
+        line = line.strip()  # Remove leading/trailing spaces
+        
         if os_id is None and id_pattern.search(line):
             os_id = id_pattern.search(line).group(1)
         
