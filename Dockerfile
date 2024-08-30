@@ -45,7 +45,7 @@ COPY . .
 USER app
 RUN poetry run pytest tests
 # Print environment information
-RUN poetry run uname -a
+RUN echo $IMAGE_TAG
 RUN poetry run python --version
 RUN poetry run pip list
 
@@ -57,7 +57,7 @@ COPY . .
 USER app
 RUN poetry run pytest tests
 # Print environment information
-RUN poetry run uname -a
+RUN echo $IMAGE_TAG
 RUN poetry run python --version
 RUN poetry run pip list
 
@@ -70,7 +70,7 @@ COPY . .
 USER app
 RUN poetry run pytest tests
 # Print environment information
-RUN poetry run uname -a
+RUN echo $IMAGE_TAG
 RUN poetry run python --version
 RUN poetry run pip list
 
