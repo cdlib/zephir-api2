@@ -156,13 +156,14 @@ def summarize_issues(jobs, workflow_id):
     return summary
 
 
-
 # Function to generate the simplified summary report
 def generate_simplified_summary_report(summary):
     report_lines = ["Test Summary Report:\n"]
     
     for job, details in summary.items():
         report_lines.append(f"Job: {job}")
+        report_lines.append(f"Workflow ID: {details['workflow_id']}")  # Add workflow_id to the report
+        report_lines.append(f"Job ID: {details['job_id']}")  # Add job_id to the report
         report_lines.append(f"Status: {details['status']}")
         
         if details.get('os_id'):
