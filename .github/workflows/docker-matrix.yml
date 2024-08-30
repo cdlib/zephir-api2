@@ -70,9 +70,10 @@ jobs:
         WORKFLOW_RUN_ID: ${{ github.run_id }}
       run: |
         python summary.py > summary_report.txt
+        cat summary_report.txt
 
-    - name: Upload Summary Report Artifact
-      uses: actions/upload-artifact@v3
-      with:
-        name: test-summary-report
-        path: summary_report.txt
+    # - name: Upload Summary Report Artifact
+    #   uses: actions/upload-artifact@v3
+    #   with:
+    #     name: test-summary-report
+    #     path: summary_report.txt

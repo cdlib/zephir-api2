@@ -37,11 +37,6 @@ FROM poetry AS build
 COPY pyproject.toml poetry.lock ./
 RUN poetry install --no-root --without dev && rm -rf ${POETRY_CACHE_DIR};
 
-# FROM poetry AS build-minor-update
-# # Install minor version updates in the absence of poetry.lock file
-# COPY pyproject.toml poetry.lock ./
-# RUN poetry install --no-root --without dev && rm -rf ${POETRY_CACHE_DIR};
-
 FROM build AS test
 # Install dev dependencies
 RUN poetry install --only dev --no-root && rm -rf ${POETRY_CACHE_DIR};
@@ -49,6 +44,9 @@ COPY . .
 # Run tests
 USER app
 RUN poetry run pytest tests
+# Print environment information
+RUN poetry run uname -a
+RUN poetry run python --version
 RUN poetry run pip list
 
 FROM poetry AS build-unlocked-test
@@ -58,6 +56,9 @@ COPY . .
 # Run tests
 USER app
 RUN poetry run pytest tests
+# Print environment information
+RUN poetry run uname -a
+RUN poetry run python --version
 RUN poetry run pip list
 
 FROM poetry AS build-latest-test
@@ -68,6 +69,9 @@ COPY . .
 # Run tests
 USER app
 RUN poetry run pytest tests
+# Print environment information
+RUN poetry run uname -a
+RUN poetry run python --version
 RUN poetry run pip list
 
 FROM base AS production
