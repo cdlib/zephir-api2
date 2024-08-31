@@ -1,6 +1,7 @@
 import os
 import requests
 import re
+import csv
 
 # GitHub environment variables
 GITHUB_TOKEN = os.getenv("GITHUB_TOKEN")
@@ -33,10 +34,7 @@ def get_job_logs(job_id):
         print(f"Failed to retrieve logs for job {job_id}: {response.status_code}, {response.text}")  # Debugging output
     return None
 
-
 # Function to analyze logs for environment and issue information
-import re
-
 def analyze_logs(log_content):
     os_id = None
     version_id = None
@@ -97,8 +95,6 @@ def analyze_logs(log_content):
     
     return os_id, version_id, version_codename, full_version, python_version, issues_found
 
-
-
 # Function to summarize the issues based on the jobs
 def summarize_issues(jobs, workflow_id):
     summary = {}
@@ -143,6 +139,30 @@ def summarize_issues(jobs, workflow_id):
 
     return summary
 
+# Function to write the summary to a TSV file
+def write_summary_to_tsv(summary, file_name):
+    fieldnames = [
+        "Job Name", "Workflow ID", "Job ID", "Status", "OS ID",
+        "Version ID", "Version Codename", "Full Version", "Python Version", "Issues Found"
+    ]
+    
+    with open(file_name, mode='w', newline='') as tsv_file:
+        writer = csv.DictWriter(tsv_file, fieldnames=fieldnames, delimiter='\t')
+        writer.writeheader()
+        
+        for job_name, details in summary.items():
+            writer.writerow({
+                "Job Name": job_name,
+                "Workflow ID": details['workflow_id'],
+                "Job ID": details['job_id'],
+                "Status": details['status'],
+                "OS ID": details['os_id'],
+                "Version ID": details['version_id'],
+                "Version Codename": details['version_codename'],
+                "Full Version": details['full_version'],
+                "Python Version": details['python_version'],
+                "Issues Found": "Yes" if details['issues_found'] else "No"
+            })
 
 # Function to generate the simplified summary report
 def generate_simplified_summary_report(summary):
@@ -190,3 +210,8 @@ if __name__ == "__main__":
         
         # Print the report to the console
         print(report)
+        
+        # Write summary to a TSV file
+        tsv_file_name = "summary_report.tsv"
+        write_summary_to_tsv(summary, tsv_file_name)
+        print(f"Summary written to {tsv_file_name}")
