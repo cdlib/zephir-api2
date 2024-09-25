@@ -1,6 +1,6 @@
 
 # Zephir API Documentation
-[http://localhost/documentation](http://localhost/documentation)
+[http://localhost/api/documentation](http://localhost/api/documentation)
 
 ### Purpose
 The Zephir Item API provides an access point to the item-level metadata record for all 
@@ -17,11 +17,11 @@ preferences can be made with the following methods.
 
 * Explicit extension (.xml, .json) to the API call (debug option)
 
-> Example: [http://localhost/ping.json](http://localhost/ping.json))  
+> Example: [http://localhost/api/ping.json](http://localhost/api/ping.json))  
 
 >     {"status":200, "message":"Success"}
 
-> Example [http://localhost/item/mdp.39015012078393.json](http://localhost/item/mdp.39015012078393.json)
+> Example [http://localhost/api/item/mdp.39015012078393.json](http://localhost/api/item/mdp.39015012078393.json)
 
 >     {"leader":"00925nam a22003011  4500","fields":[{"001":"mdp.39015012078393"},...
 
@@ -30,7 +30,7 @@ preferences can be made with the following methods.
 ### System
 
 __GET /ping__  
-[http://localhost/ping](http://localhost/ping)
+[http://localhost/api/ping](http://localhost/api/ping)
 
     <response>
     <status>200</status>
@@ -55,7 +55,7 @@ Content: 'Failure' Message
 ### Item
 
 __GET /item/{htid}__  
-[http://localhost/item/mdp.39015012078393](http://localhost/item/mdp.39015012078393)
+[http://localhost/api/item/mdp.39015012078393](http://localhost/api/item/mdp.39015012078393)
 
     <record xmlns="http://www.loc.gov/MARC21/slim">
     <leader>00925nam a22003011 4500</leader>

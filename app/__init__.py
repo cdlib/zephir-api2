@@ -16,6 +16,6 @@ def create_app(config_class=Config):
     db.init_app(app)
 
     # Set up routes
-    app.register_blueprint(blueprint)
+    app.register_blueprint(blueprint, url_prefix='/api')
 
     return app
