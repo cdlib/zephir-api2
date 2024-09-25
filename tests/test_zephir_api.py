@@ -5,41 +5,41 @@ import pytest
 
 def test_ping(client):
     """Test the /ping endpoint."""
-    response = client.get('/ping')
+    response = client.get('/api/ping')
     assert response.status_code == 200
     assert 'Success' in response.get_data(as_text=True)
 
 
 def test_documentation(client):
     """Test the /documentation endpoint."""
-    response = client.get('/documentation')
+    response = client.get('/api/documentation')
     assert response.status_code == 200
     assert 'Zephir API Documentation' in response.get_data(as_text=True)
 
 
 def test_id(client):
     """Test the /item/ endpoint."""
-    response = client.get('/item/test.123testitem')
+    response = client.get('/api/item/test.123testitem')
     assert response.status_code == 200
     assert 'test.123testitem' in response.get_data(as_text=True)
 
 
 def test_barcode(client):
     """Test the /item/ endpoint."""
-    response = client.get('/item/test.39015012078393')
+    response = client.get('/api/item/test.39015012078393')
     assert response.status_code == 200
     assert 'test.39015012078393' in response.get_data(as_text=True)
 
 
 def test_ark(client):
     """Test the /item/ endpoint."""
-    response = client.get('/item/test.ark:/13960/t1vd7kt4b')
+    response = client.get('/api/item/test.ark:/13960/t1vd7kt4b')
     assert response.status_code == 200
     assert 'test.ark:/13960/t1vd7kt4b' in response.get_data(as_text=True)
 
 
 def test_default_content_negotiation(client):
-    response = client.get('/item/test.123testitem')
+    response = client.get('/api/item/test.123testitem')
     assert response.status_code == 200
     assert response.headers['Content-Type'] == 'text/xml'
 
@@ -48,7 +48,7 @@ def test_default_content_negotiation(client):
 
 
 def test_xml_content_negotiation(client):
-    response = client.get('/item/test.123testitem', headers={'Accept': 'text/xml'})
+    response = client.get('/api/item/test.123testitem', headers={'Accept': 'text/xml'})
     assert response.status_code == 200
     assert response.headers['Content-Type'] == 'text/xml'
 
@@ -57,7 +57,7 @@ def test_xml_content_negotiation(client):
 
 
 def test_json_content_negotiation(client):
-    response = client.get('/item/test.123testitem', headers={'Accept': 'application/json'})
+    response = client.get('/api/item/test.123testitem', headers={'Accept': 'application/json'})
     assert response.status_code == 200
     assert response.headers['Content-Type'] == 'application/json'
 
@@ -68,7 +68,7 @@ def test_json_content_negotiation(client):
 
 
 def test_json_overrides_xml(client):
-    response = client.get('/item/test.123testitem.json', headers={'Accept': 'text/xml'})
+    response = client.get('/api/item/test.123testitem.json', headers={'Accept': 'text/xml'})
     assert response.status_code == 200
     assert response.headers['Content-Type'] == 'application/json'
 
@@ -79,7 +79,7 @@ def test_json_overrides_xml(client):
 
 
 def test_xml_overrides_json(client):
-    response = client.get('/item/test.123testitem.xml', headers={'Accept': 'application/json'})
+    response = client.get('/api/item/test.123testitem.xml', headers={'Accept': 'application/json'})
     assert response.status_code == 200
     assert response.headers['Content-Type'] == 'text/xml'
 
