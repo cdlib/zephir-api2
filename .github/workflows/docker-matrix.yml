@@ -1,11 +1,11 @@
-name: Compatibility Matrix
+name: Docker Matrix
 
 on:
   workflow_dispatch:
 
 jobs:
-  CompatibilityMatrix:
-    runs-on: ubuntu-latest
+  DockerMatrix:
+    runs-on: ubuntu-24.04
 
     strategy:
       fail-fast: false
