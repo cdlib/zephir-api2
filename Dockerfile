@@ -1,4 +1,4 @@
-ARG IMAGE_TAG=3.12-slim-bullseye
+ARG IMAGE_TAG=3.13-slim-bullseye
 
 FROM python:${IMAGE_TAG} AS base
 # Allowing the argumenets to be read into the dockerfile. Ex:  .env > compose.yml > Dockerfile
