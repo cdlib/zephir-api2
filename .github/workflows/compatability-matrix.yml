@@ -1,4 +1,4 @@
-name: Compatibility Matrix
+name: Compatibility Matrix [[Minor and Major Dependency Updates] x [Current and Later Versions Major Python Versions]] in Gitub Runner.
 
 on:
   workflow_dispatch:
