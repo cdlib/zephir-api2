@@ -1,4 +1,4 @@
-name: Docker Matrix [[Current and Minor Dependency Updates] x [Current and Later Versions Major Python Versions]] in Docker
+name: Docker Matrix
 
 on:
   workflow_dispatch:
