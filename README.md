@@ -34,7 +34,7 @@ export DATABASE_URI=mysql+mysqlconnector://user:pass@host/dbname
 uv run python -m gunicorn -c gunicorn_config.py
 ```
 
-The API will be available at `http://localhost:8000`.
+The API will be available at `http://localhost:8000/api/`.
 
 **Run tests:**
 
@@ -71,31 +71,19 @@ docker run $(docker build -q --target test .)
 
 # Build and run the production image
 docker run -p 8000:8000 \
-  -e FLASK_ENV=production \
-  -e APP_PORT=8000 \
-  -e LOG_LEVEL=INFO \
   -e DATABASE_URI=mysql+mysqlconnector://user:pass@host/dbname \
   $(docker build -q --target production .)
 ```
 
 **Run with Docker Compose:**
 
-1. Create a `.env` file in the project root:
+Docker Compose will automatically bootstrap a MySQL instance with test data from `tests/sample_data.csv`.
 
-   ```
-   FLASK_ENV=development
-   APP_PORT=8000
-   LOG_LEVEL=INFO
-   DATABASE_URI=mysql+mysqlconnector://user:pass@host/dbname
-   ```
+```sh
+docker compose up
+```
 
-2. Start the stack:
-
-   ```sh
-   docker compose up
-   ```
-
-   The API will be available at `http://localhost:8000` once tests pass.
+The API will be available at `http://localhost:8000/api/` once the MySQL service has finished bootstrapping.
 
 ---
 
