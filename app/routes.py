@@ -43,7 +43,8 @@ def documentation():
     html_content = markdown.markdown(content.replace('http://localhost/', request.url_root))
 
     # Return HTML content. The Markup class prevents Flask from escaping HTML content.
-    return Markup(html_content)
+    # Bandit flags this as unsafe, but the markup is entirely within our control so its safe
+    return Markup(html_content)  # nosec
 
 
 @blueprint.route('/ping')
