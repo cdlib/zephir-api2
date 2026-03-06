@@ -1,6 +1,7 @@
 import markdown
 from flask import Blueprint, current_app, jsonify, make_response, redirect, request, url_for
 from markupsafe import Markup
+from urllib.parse import urlparse
 from sqlalchemy.orm.exc import NoResultFound
 
 from .models import ZephirFiledata
@@ -39,12 +40,17 @@ def documentation():
     with open('API.md', 'r') as file:
         content = file.read()
 
+    # Sanitize the URL root by reconstructing it from only the scheme and netloc,
+    # preventing Host header injection from affecting the rendered output.
+    parsed = urlparse(request.url_root)
+    safe_url_root = f"{parsed.scheme}://{parsed.netloc}/"
+
     # Convert Markdown to HTML
-    html_content = markdown.markdown(content.replace('http://localhost/', request.url_root))
+    html_content = markdown.markdown(content.replace('http://localhost/', safe_url_root))
 
     # Return HTML content. The Markup class prevents Flask from escaping HTML content.
-    # Bandit flags this as unsafe, but the markup is entirely within our control so it's safe
-    return Markup(html_content)  # nosec
+    # The content is safe: it comes from a controlled Markdown file and the URL is sanitized.
+    return Markup(html_content)  # nosec B704
 
 
 @blueprint.route('/ping')
