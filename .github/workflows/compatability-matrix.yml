@@ -20,48 +20,44 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
 
-    - name: Set up Python
-      uses: actions/setup-python@v5.1.1
+    - name: Install uv
+      uses: astral-sh/setup-uv@v5
       with:
         python-version: ${{ matrix.python-version }}
 
     - name: Get Python version
       id: python_version
       run: |
-        python --version
-
-    - name: Install Poetry
-      run: |
-        pip install poetry
+        uv run python --version
 
     - name: Backup lock file
       run: |
-        if [ -f poetry.lock ]; then
-          mv poetry.lock poetry.lock.backup
+        if [ -f uv.lock ]; then
+          mv uv.lock uv.lock.backup
         fi
 
     - name: Install and update dependencies
       run: |
         if [[ "${{ matrix.update-strategy }}" == "minor" ]]; then
           echo "Updating to minor versions"
-          poetry install --no-root --with dev
-          poetry update
+          uv lock --upgrade
+          uv sync
         elif [[ "${{ matrix.update-strategy }}" == "major" ]]; then
           echo "Updating to major versions"
           cp pyproject.toml pyproject.toml.backup
-          sed -i 's/\^/>=/g' pyproject.toml  # Adjust constraints to allow major updates
-          poetry install --no-root --with dev
+          sed -i 's/~=/>=/g' pyproject.toml  # Adjust constraints to allow major updates
+          uv lock --upgrade
+          uv sync
           mv pyproject.toml.backup pyproject.toml
         fi
 
-
     - name: Restore lock file
       run: |
-        if [ -f poetry.lock.backup ]; then
-          mv poetry.lock.backup poetry.lock
+        if [ -f uv.lock.backup ]; then
+          mv uv.lock.backup uv.lock
         fi
 
     - name: Run tests
       run: |
-        poetry run pytest
+        uv run pytest
       continue-on-error: false  # Set to true if you want to continue on test failures
