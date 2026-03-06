@@ -49,6 +49,6 @@ jobs:
 
     - name: Run Vulture for dead code analysis
       run: |
-        uv run vulture . --min-confidence 70
+        uv run vulture . --min-confidence 70 --exclude .venv
       continue-on-error: false 
 
