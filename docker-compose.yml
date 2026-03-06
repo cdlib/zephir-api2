@@ -1,26 +1,46 @@
+# Full local stack (MySQL + zephir-api):
+#
+#   docker compose up
+
 services:
+  mysql:
+    image: mysql:8.4
+    container_name: zephir_mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: devpassword
+      MYSQL_DATABASE: zephir_dev
+    ports:
+      - "3306:3306"
+    volumes:
+      - .data/mysql:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-pdevpassword"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+
+  bootstrap:
+    build:
+      context: .
+      target: production
+    environment:
+      - DATABASE_URI=mysql+mysqlconnector://root:devpassword@mysql/zephir_dev
+    command: ["uv", "run", "python", "bootstrap_db.py"]
+    depends_on:
+      mysql:
+        condition: service_healthy
+
   zephir-api:
     build:
       context: .
       target: production
     ports:
-      - "${APP_PORT}:${APP_PORT}"
+      - "${APP_PORT:-8000}:${APP_PORT:-8000}"
     environment:
-      # Required
-      - FLASK_ENV
-      - APP_PORT
-      - LOG_LEVEL
-  
-      # One of the following must be set
-      - DATABASE_URI
-
-      - DATABASE_CREDENTIALS_SECRET_NAME
-      - AWS_DEFAULT_REGION
-      - AWS_ACCESS_KEY_ID
-      - AWS_SECRET_ACCESS_KEY
-      - AWS_SESSION_TOKEN
-
-      - DB_USERNAME
-      - DB_PASSWORD
-      - DB_HOST
-      - DB_DATABASE
+      - DATABASE_URI=mysql+mysqlconnector://root:devpassword@mysql/zephir_dev
+    depends_on:
+      mysql:
+        condition: service_healthy
+      bootstrap:
+        condition: service_completed_successfully

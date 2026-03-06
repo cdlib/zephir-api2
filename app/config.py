@@ -62,7 +62,7 @@ def get_database_uri():
 
 
 class Config:
-    LOG_LEVEL = os.getenv("LOG_LEVEL")
+    LOG_LEVEL = os.getenv("LOG_LEVEL", "INFO").upper()
     SQLALCHEMY_DATABASE_URI = get_database_uri()
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SQLALCHEMY_ENGINE_OPTIONS = {

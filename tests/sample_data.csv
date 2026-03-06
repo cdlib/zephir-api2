@@ -1,0 +1,322 @@
+id,metadata,metadata_json
+test.123testitem,"<?xml version=""1.0"" encoding=""UTF-8""?>
+<record xmlns=""http://www.loc.gov/MARC21/slim"">
+  <leader>00989nam a22002771  4500</leader>
+  <controlfield tag=""001"">test.123testitem</controlfield>
+  <controlfield tag=""003"">MiAaHDL</controlfield>
+  <controlfield tag=""005"">20120717000000.0</controlfield>
+  <controlfield tag=""006"">m        d        </controlfield>
+  <controlfield tag=""007"">cr bn ---auaua</controlfield>
+  <controlfield tag=""008"">880715s1969    nyu          |00001 eng  </controlfield>
+  <datafield tag=""010"" ind1="" "" ind2="" "">
+    <subfield code=""a"">75076963</subfield>
+  </datafield>
+  <datafield tag=""035"" ind1="" "" ind2="" "">
+    <subfield code=""a"">(MIU)000000312</subfield>
+  </datafield>
+  <datafield tag=""035"" ind1="" "" ind2="" "">
+    <subfield code=""a"">sdr-miu000000312</subfield>
+  </datafield>
+  <datafield tag=""035"" ind1="" "" ind2="" "">
+    <subfield code=""a"">(OCoLC)30263</subfield>
+  </datafield>
+  <datafield tag=""035"" ind1="" "" ind2="" "">
+    <subfield code=""a"">(CaOTULAS)159818388</subfield>
+  </datafield>
+  <datafield tag=""035"" ind1="" "" ind2="" "">
+    <subfield code=""a"">(RLIN)MIUG0030263-B</subfield>
+  </datafield>
+  <datafield tag=""040"" ind1="" "" ind2="" "">
+    <subfield code=""a"">DLC</subfield>
+    <subfield code=""c"">DLC</subfield>
+    <subfield code=""d"">MiU</subfield>
+  </datafield>
+  <datafield tag=""050"" ind1=""0"" ind2="" "">
+    <subfield code=""a"">PZ4.S944</subfield>
+    <subfield code=""b"">De</subfield>
+    <subfield code=""a"">PS3569.U33</subfield>
+  </datafield>
+  <datafield tag=""082"" ind1="" "" ind2="" "">
+    <subfield code=""a"">813/.5/4</subfield>
+  </datafield>
+  <datafield tag=""100"" ind1=""1"" ind2="" "">
+    <subfield code=""a"">Sukenick, Ronald.</subfield>
+  </datafield>
+  <datafield tag=""245"" ind1=""1"" ind2=""4"">
+    <subfield code=""a"">The death of the novel and other stories.</subfield>
+  </datafield>
+  <datafield tag=""260"" ind1="" "" ind2="" "">
+    <subfield code=""a"">New York,</subfield>
+    <subfield code=""b"">Dial Press,</subfield>
+    <subfield code=""c"">1969.</subfield>
+  </datafield>
+  <datafield tag=""300"" ind1="" "" ind2="" "">
+    <subfield code=""a"">175 p.</subfield>
+    <subfield code=""c"">24 cm.</subfield>
+  </datafield>
+  <datafield tag=""500"" ind1="" "" ind2="" "">
+    <subfield code=""a"">Two of these stories, The permanent crisis and What's your story, first appeared in Epoch, fall, 1960 and the Paris review, no. 44, fall, 1968, respectively.</subfield>
+  </datafield>
+  <datafield tag=""505"" ind1=""0"" ind2="" "">
+    <subfield code=""a"">The permanent crisis.--Momentum.--The death of the novel.--Roast beef: A slice of life.--What's your story.--The birds.</subfield>
+  </datafield>
+  <datafield tag=""538"" ind1="" "" ind2="" "">
+    <subfield code=""a"">Mode of access: Internet.</subfield>
+  </datafield>
+    <datafield tag=""542"" ind1="" "" ind2="" "">
+    <subfield code=""f"">Copyright 1895 </subfield>
+    <subfield code=""g"">1895</subfield>
+    <subfield code=""i"">1927 </subfield>
+    <subfield code=""k"">London, Macmillan</subfield>
+    <subfield code=""l"">Public domain</subfield>
+    <subfield code=""o"">20061201175546</subfield>
+    <subfield code=""p"">GB </subfield>
+  </datafield>
+  <datafield tag=""CID"" ind1="" "" ind2="" "">
+    <subfield code=""a"">000000312</subfield>
+  </datafield>
+  <datafield tag=""DAT"" ind1=""0"" ind2="" "">
+    <subfield code=""a"">20120717104833.0</subfield>
+    <subfield code=""b"">20120717000000.0</subfield>
+  </datafield>
+  <datafield tag=""DAT"" ind1=""1"" ind2="" "">
+    <subfield code=""a"">20120814121459.0</subfield>
+    <subfield code=""b"">2014-12-17T00:19:05Z</subfield>
+  </datafield>
+  <datafield tag=""CAT"" ind1="" "" ind2="" "">
+    <subfield code=""a"">SDR-MIU</subfield>
+    <subfield code=""d"">EX LIBRIS - ALEPH</subfield>
+    <subfield code=""l"">loader.pl-001-001</subfield>
+  </datafield>
+  <datafield tag=""FMT"" ind1="" "" ind2="" "">
+    <subfield code=""a"">BK</subfield>
+  </datafield>
+  <datafield tag=""HOL"" ind1="" "" ind2="" "">
+    <subfield code=""0"">sdr-miu000000312</subfield>
+    <subfield code=""a"">MiU</subfield>
+    <subfield code=""b"">SDR</subfield>
+    <subfield code=""c"">MIU</subfield>
+    <subfield code=""p"">mdp.39015005499622</subfield>
+    <subfield code=""s"">MIU</subfield>
+    <subfield code=""1"">000000312</subfield>
+  </datafield>
+  <datafield tag=""974"" ind1="" "" ind2="" "">
+    <subfield code=""d"">20141217</subfield>
+    <subfield code=""s"">google</subfield>
+    <subfield code=""u"">mdp.39015005499622</subfield>
+  </datafield>
+</record>","{""leader"":""00989nam a22002771  4500"",""fields"":[{""001"":""mdp.39015005499622""},{""003"":""MiAaHDL""},{""005"":""20120717000000.0""},{""006"":""m        d        ""},{""007"":""cr bn ---auaua""},{""008"":""880715s1969    nyu          |00001 eng  ""},{""010"":{""ind1"":"" "",""ind2"":"" "",""subfields"":[{""a"":""75076963""}]}},{""035"":{""ind1"":"" "",""ind2"":"" "",""subfields"":[{""a"":""(MIU)000000312""}]}},{""035"":{""ind1"":"" "",""ind2"":"" "",""subfields"":[{""a"":""sdr-miu000000312""}]}},{""035"":{""ind1"":"" "",""ind2"":"" "",""subfields"":[{""a"":""(OCoLC)30263""}]}},{""035"":{""ind1"":"" "",""ind2"":"" "",""subfields"":[{""a"":""(CaOTULAS)159818388""}]}},{""035"":{""ind1"":"" "",""ind2"":"" "",""subfields"":[{""a"":""(RLIN)MIUG0030263-B""}]}},{""040"":{""ind1"":"" "",""ind2"":"" "",""subfields"":[{""a"":""DLC""},{""c"":""DLC""},{""d"":""MiU""}]}},{""050"":{""ind1"":""0"",""ind2"":"" "",""subfields"":[{""a"":""PZ4.S944""},{""b"":""De""},{""a"":""PS3569.U33""}]}},{""082"":{""ind1"":"" "",""ind2"":"" "",""subfields"":[{""a"":""813/.5/4""}]}},{""100"":{""ind1"":""1"",""ind2"":"" "",""subfields"":[{""a"":""Sukenick, Ronald.""}]}},{""245"":{""ind1"":""1"",""ind2"":""4"",""subfields"":[{""a"":""The death of the novel and other stories.""}]}},{""260"":{""ind1"":"" "",""ind2"":"" "",""subfields"":[{""a"":""New York,""},{""b"":""Dial Press,""},{""c"":""1969.""}]}},{""300"":{""ind1"":"" "",""ind2"":"" "",""subfields"":[{""a"":""175 p.""},{""c"":""24 cm.""}]}},{""500"":{""ind1"":"" "",""ind2"":"" "",""subfields"":[{""a"":""Two of these stories, The permanent crisis and What's your story, first appeared in Epoch, fall, 1960 and the Paris review, no. 44, fall, 1968, respectively.""}]}},{""505"":{""ind1"":""0"",""ind2"":"" "",""subfields"":[{""a"":""The permanent crisis.--Momentum.--The death of the novel.--Roast beef: A slice of life.--What's your story.--The birds.""}]}},{""538"":{""ind1"":"" "",""ind2"":"" "",""subfields"":[{""a"":""Mode of access: Internet.""}]}},{""542"":{""ind1"":"" "",""ind2"":"" "",""subfields"":[{""f"":""Copyright 1895 ""},{""g"":""1895""},{""i"":""1927 ""},{""k"":""London, Macmillan""},{""l"":""Public domain""},{""o"":""20061201175546""},{""p"":""GB ""}]}},{""CID"":{""ind1"":"" "",""ind2"":"" "",""subfields"":[{""a"":""000000312""}]}},{""DAT"":{""ind1"":""0"",""ind2"":"" "",""subfields"":[{""a"":""20120717104833.0""},{""b"":""20120717000000.0""}]}},{""DAT"":{""ind1"":""1"",""ind2"":"" "",""subfields"":[{""a"":""20120814121459.0""},{""b"":""2014-12-17T00:19:05Z""}]}},{""CAT"":{""ind1"":"" "",""ind2"":"" "",""subfields"":[{""a"":""SDR-MIU""},{""d"":""EX LIBRIS - ALEPH""},{""l"":""loader.pl-001-001""}]}},{""FMT"":{""ind1"":"" "",""ind2"":"" "",""subfields"":[{""a"":""BK""}]}},{""HOL"":{""ind1"":"" "",""ind2"":"" "",""subfields"":[{""0"":""sdr-miu000000312""},{""a"":""MiU""},{""b"":""SDR""},{""c"":""MIU""},{""p"":""mdp.39015005499622""},{""s"":""MIU""},{""1"":""000000312""}]}},{""974"":{""ind1"":"" "",""ind2"":"" "",""subfields"":[{""d"":""20141217""},{""s"":""google""},{""u"":""mdp.39015005499622""}]}}]}"
+test.39015012078393,"<?xml version=""1.0"" encoding=""UTF-8""?>
+<record xmlns=""http://www.loc.gov/MARC21/slim"">
+  <leader>00989nam a22002771  4500</leader>
+  <controlfield tag=""001"">test.39015012078393</controlfield>
+  <controlfield tag=""003"">MiAaHDL</controlfield>
+  <controlfield tag=""005"">20120717000000.0</controlfield>
+  <controlfield tag=""006"">m        d        </controlfield>
+  <controlfield tag=""007"">cr bn ---auaua</controlfield>
+  <controlfield tag=""008"">880715s1969    nyu          |00001 eng  </controlfield>
+  <datafield tag=""010"" ind1="" "" ind2="" "">
+    <subfield code=""a"">75076963</subfield>
+  </datafield>
+  <datafield tag=""035"" ind1="" "" ind2="" "">
+    <subfield code=""a"">(MIU)000000312</subfield>
+  </datafield>
+  <datafield tag=""035"" ind1="" "" ind2="" "">
+    <subfield code=""a"">sdr-miu000000312</subfield>
+  </datafield>
+  <datafield tag=""035"" ind1="" "" ind2="" "">
+    <subfield code=""a"">(OCoLC)30263</subfield>
+  </datafield>
+  <datafield tag=""035"" ind1="" "" ind2="" "">
+    <subfield code=""a"">(CaOTULAS)159818388</subfield>
+  </datafield>
+  <datafield tag=""035"" ind1="" "" ind2="" "">
+    <subfield code=""a"">(RLIN)MIUG0030263-B</subfield>
+  </datafield>
+  <datafield tag=""040"" ind1="" "" ind2="" "">
+    <subfield code=""a"">DLC</subfield>
+    <subfield code=""c"">DLC</subfield>
+    <subfield code=""d"">MiU</subfield>
+  </datafield>
+  <datafield tag=""050"" ind1=""0"" ind2="" "">
+    <subfield code=""a"">PZ4.S944</subfield>
+    <subfield code=""b"">De</subfield>
+    <subfield code=""a"">PS3569.U33</subfield>
+  </datafield>
+  <datafield tag=""082"" ind1="" "" ind2="" "">
+    <subfield code=""a"">813/.5/4</subfield>
+  </datafield>
+  <datafield tag=""100"" ind1=""1"" ind2="" "">
+    <subfield code=""a"">Sukenick, Ronald.</subfield>
+  </datafield>
+  <datafield tag=""245"" ind1=""1"" ind2=""4"">
+    <subfield code=""a"">The death of the novel and other stories.</subfield>
+  </datafield>
+  <datafield tag=""260"" ind1="" "" ind2="" "">
+    <subfield code=""a"">New York,</subfield>
+    <subfield code=""b"">Dial Press,</subfield>
+    <subfield code=""c"">1969.</subfield>
+  </datafield>
+  <datafield tag=""300"" ind1="" "" ind2="" "">
+    <subfield code=""a"">175 p.</subfield>
+    <subfield code=""c"">24 cm.</subfield>
+  </datafield>
+  <datafield tag=""500"" ind1="" "" ind2="" "">
+    <subfield code=""a"">Two of these stories, The permanent crisis and What's your story, first appeared in Epoch, fall, 1960 and the Paris review, no. 44, fall, 1968, respectively.</subfield>
+  </datafield>
+  <datafield tag=""505"" ind1=""0"" ind2="" "">
+    <subfield code=""a"">The permanent crisis.--Momentum.--The death of the novel.--Roast beef: A slice of life.--What's your story.--The birds.</subfield>
+  </datafield>
+  <datafield tag=""538"" ind1="" "" ind2="" "">
+    <subfield code=""a"">Mode of access: Internet.</subfield>
+  </datafield>
+    <datafield tag=""542"" ind1="" "" ind2="" "">
+    <subfield code=""f"">Copyright 1895 </subfield>
+    <subfield code=""g"">1895</subfield>
+    <subfield code=""i"">1927 </subfield>
+    <subfield code=""k"">London, Macmillan</subfield>
+    <subfield code=""l"">Public domain</subfield>
+    <subfield code=""o"">20061201175546</subfield>
+    <subfield code=""p"">GB </subfield>
+  </datafield>
+  <datafield tag=""CID"" ind1="" "" ind2="" "">
+    <subfield code=""a"">000000312</subfield>
+  </datafield>
+  <datafield tag=""DAT"" ind1=""0"" ind2="" "">
+    <subfield code=""a"">20120717104833.0</subfield>
+    <subfield code=""b"">20120717000000.0</subfield>
+  </datafield>
+  <datafield tag=""DAT"" ind1=""1"" ind2="" "">
+    <subfield code=""a"">20120814121459.0</subfield>
+    <subfield code=""b"">2014-12-17T00:19:05Z</subfield>
+  </datafield>
+  <datafield tag=""CAT"" ind1="" "" ind2="" "">
+    <subfield code=""a"">SDR-MIU</subfield>
+    <subfield code=""d"">EX LIBRIS - ALEPH</subfield>
+    <subfield code=""l"">loader.pl-001-001</subfield>
+  </datafield>
+  <datafield tag=""FMT"" ind1="" "" ind2="" "">
+    <subfield code=""a"">BK</subfield>
+  </datafield>
+  <datafield tag=""HOL"" ind1="" "" ind2="" "">
+    <subfield code=""0"">sdr-miu000000312</subfield>
+    <subfield code=""a"">MiU</subfield>
+    <subfield code=""b"">SDR</subfield>
+    <subfield code=""c"">MIU</subfield>
+    <subfield code=""p"">mdp.39015005499622</subfield>
+    <subfield code=""s"">MIU</subfield>
+    <subfield code=""1"">000000312</subfield>
+  </datafield>
+  <datafield tag=""974"" ind1="" "" ind2="" "">
+    <subfield code=""d"">20141217</subfield>
+    <subfield code=""s"">google</subfield>
+    <subfield code=""u"">mdp.39015005499622</subfield>
+  </datafield>
+</record>","{""leader"":""00989nam a22002771  4500"",""fields"":[{""001"":""mdp.39015005499622""},{""003"":""MiAaHDL""},{""005"":""20120717000000.0""},{""006"":""m        d        ""},{""007"":""cr bn ---auaua""},{""008"":""880715s1969    nyu          |00001 eng  ""},{""010"":{""ind1"":"" "",""ind2"":"" "",""subfields"":[{""a"":""75076963""}]}},{""035"":{""ind1"":"" "",""ind2"":"" "",""subfields"":[{""a"":""(MIU)000000312""}]}},{""035"":{""ind1"":"" "",""ind2"":"" "",""subfields"":[{""a"":""sdr-miu000000312""}]}},{""035"":{""ind1"":"" "",""ind2"":"" "",""subfields"":[{""a"":""(OCoLC)30263""}]}},{""035"":{""ind1"":"" "",""ind2"":"" "",""subfields"":[{""a"":""(CaOTULAS)159818388""}]}},{""035"":{""ind1"":"" "",""ind2"":"" "",""subfields"":[{""a"":""(RLIN)MIUG0030263-B""}]}},{""040"":{""ind1"":"" "",""ind2"":"" "",""subfields"":[{""a"":""DLC""},{""c"":""DLC""},{""d"":""MiU""}]}},{""050"":{""ind1"":""0"",""ind2"":"" "",""subfields"":[{""a"":""PZ4.S944""},{""b"":""De""},{""a"":""PS3569.U33""}]}},{""082"":{""ind1"":"" "",""ind2"":"" "",""subfields"":[{""a"":""813/.5/4""}]}},{""100"":{""ind1"":""1"",""ind2"":"" "",""subfields"":[{""a"":""Sukenick, Ronald.""}]}},{""245"":{""ind1"":""1"",""ind2"":""4"",""subfields"":[{""a"":""The death of the novel and other stories.""}]}},{""260"":{""ind1"":"" "",""ind2"":"" "",""subfields"":[{""a"":""New York,""},{""b"":""Dial Press,""},{""c"":""1969.""}]}},{""300"":{""ind1"":"" "",""ind2"":"" "",""subfields"":[{""a"":""175 p.""},{""c"":""24 cm.""}]}},{""500"":{""ind1"":"" "",""ind2"":"" "",""subfields"":[{""a"":""Two of these stories, The permanent crisis and What's your story, first appeared in Epoch, fall, 1960 and the Paris review, no. 44, fall, 1968, respectively.""}]}},{""505"":{""ind1"":""0"",""ind2"":"" "",""subfields"":[{""a"":""The permanent crisis.--Momentum.--The death of the novel.--Roast beef: A slice of life.--What's your story.--The birds.""}]}},{""538"":{""ind1"":"" "",""ind2"":"" "",""subfields"":[{""a"":""Mode of access: Internet.""}]}},{""542"":{""ind1"":"" "",""ind2"":"" "",""subfields"":[{""f"":""Copyright 1895 ""},{""g"":""1895""},{""i"":""1927 ""},{""k"":""London, Macmillan""},{""l"":""Public domain""},{""o"":""20061201175546""},{""p"":""GB ""}]}},{""CID"":{""ind1"":"" "",""ind2"":"" "",""subfields"":[{""a"":""000000312""}]}},{""DAT"":{""ind1"":""0"",""ind2"":"" "",""subfields"":[{""a"":""20120717104833.0""},{""b"":""20120717000000.0""}]}},{""DAT"":{""ind1"":""1"",""ind2"":"" "",""subfields"":[{""a"":""20120814121459.0""},{""b"":""2014-12-17T00:19:05Z""}]}},{""CAT"":{""ind1"":"" "",""ind2"":"" "",""subfields"":[{""a"":""SDR-MIU""},{""d"":""EX LIBRIS - ALEPH""},{""l"":""loader.pl-001-001""}]}},{""FMT"":{""ind1"":"" "",""ind2"":"" "",""subfields"":[{""a"":""BK""}]}},{""HOL"":{""ind1"":"" "",""ind2"":"" "",""subfields"":[{""0"":""sdr-miu000000312""},{""a"":""MiU""},{""b"":""SDR""},{""c"":""MIU""},{""p"":""mdp.39015005499622""},{""s"":""MIU""},{""1"":""000000312""}]}},{""974"":{""ind1"":"" "",""ind2"":"" "",""subfields"":[{""d"":""20141217""},{""s"":""google""},{""u"":""mdp.39015005499622""}]}}]}"
+test.ark:/13960/t1vd7kt4b,"<?xml version=""1.0"" encoding=""UTF-8""?>
+<record xmlns=""http://www.loc.gov/MARC21/slim"">
+  <leader>00989nam a22002771  4500</leader>
+  <controlfield tag=""001"">test.ark:/13960/t1vd7kt4b</controlfield>
+  <controlfield tag=""003"">MiAaHDL</controlfield>
+  <controlfield tag=""005"">20120717000000.0</controlfield>
+  <controlfield tag=""006"">m        d        </controlfield>
+  <controlfield tag=""007"">cr bn ---auaua</controlfield>
+  <controlfield tag=""008"">880715s1969    nyu          |00001 eng  </controlfield>
+  <datafield tag=""010"" ind1="" "" ind2="" "">
+    <subfield code=""a"">75076963</subfield>
+  </datafield>
+  <datafield tag=""035"" ind1="" "" ind2="" "">
+    <subfield code=""a"">(MIU)000000312</subfield>
+  </datafield>
+  <datafield tag=""035"" ind1="" "" ind2="" "">
+    <subfield code=""a"">sdr-miu000000312</subfield>
+  </datafield>
+  <datafield tag=""035"" ind1="" "" ind2="" "">
+    <subfield code=""a"">(OCoLC)30263</subfield>
+  </datafield>
+  <datafield tag=""035"" ind1="" "" ind2="" "">
+    <subfield code=""a"">(CaOTULAS)159818388</subfield>
+  </datafield>
+  <datafield tag=""035"" ind1="" "" ind2="" "">
+    <subfield code=""a"">(RLIN)MIUG0030263-B</subfield>
+  </datafield>
+  <datafield tag=""040"" ind1="" "" ind2="" "">
+    <subfield code=""a"">DLC</subfield>
+    <subfield code=""c"">DLC</subfield>
+    <subfield code=""d"">MiU</subfield>
+  </datafield>
+  <datafield tag=""050"" ind1=""0"" ind2="" "">
+    <subfield code=""a"">PZ4.S944</subfield>
+    <subfield code=""b"">De</subfield>
+    <subfield code=""a"">PS3569.U33</subfield>
+  </datafield>
+  <datafield tag=""082"" ind1="" "" ind2="" "">
+    <subfield code=""a"">813/.5/4</subfield>
+  </datafield>
+  <datafield tag=""100"" ind1=""1"" ind2="" "">
+    <subfield code=""a"">Sukenick, Ronald.</subfield>
+  </datafield>
+  <datafield tag=""245"" ind1=""1"" ind2=""4"">
+    <subfield code=""a"">The death of the novel and other stories.</subfield>
+  </datafield>
+  <datafield tag=""260"" ind1="" "" ind2="" "">
+    <subfield code=""a"">New York,</subfield>
+    <subfield code=""b"">Dial Press,</subfield>
+    <subfield code=""c"">1969.</subfield>
+  </datafield>
+  <datafield tag=""300"" ind1="" "" ind2="" "">
+    <subfield code=""a"">175 p.</subfield>
+    <subfield code=""c"">24 cm.</subfield>
+  </datafield>
+  <datafield tag=""500"" ind1="" "" ind2="" "">
+    <subfield code=""a"">Two of these stories, The permanent crisis and What's your story, first appeared in Epoch, fall, 1960 and the Paris review, no. 44, fall, 1968, respectively.</subfield>
+  </datafield>
+  <datafield tag=""505"" ind1=""0"" ind2="" "">
+    <subfield code=""a"">The permanent crisis.--Momentum.--The death of the novel.--Roast beef: A slice of life.--What's your story.--The birds.</subfield>
+  </datafield>
+  <datafield tag=""538"" ind1="" "" ind2="" "">
+    <subfield code=""a"">Mode of access: Internet.</subfield>
+  </datafield>
+    <datafield tag=""542"" ind1="" "" ind2="" "">
+    <subfield code=""f"">Copyright 1895 </subfield>
+    <subfield code=""g"">1895</subfield>
+    <subfield code=""i"">1927 </subfield>
+    <subfield code=""k"">London, Macmillan</subfield>
+    <subfield code=""l"">Public domain</subfield>
+    <subfield code=""o"">20061201175546</subfield>
+    <subfield code=""p"">GB </subfield>
+  </datafield>
+  <datafield tag=""CID"" ind1="" "" ind2="" "">
+    <subfield code=""a"">000000312</subfield>
+  </datafield>
+  <datafield tag=""DAT"" ind1=""0"" ind2="" "">
+    <subfield code=""a"">20120717104833.0</subfield>
+    <subfield code=""b"">20120717000000.0</subfield>
+  </datafield>
+  <datafield tag=""DAT"" ind1=""1"" ind2="" "">
+    <subfield code=""a"">20120814121459.0</subfield>
+    <subfield code=""b"">2014-12-17T00:19:05Z</subfield>
+  </datafield>
+  <datafield tag=""CAT"" ind1="" "" ind2="" "">
+    <subfield code=""a"">SDR-MIU</subfield>
+    <subfield code=""d"">EX LIBRIS - ALEPH</subfield>
+    <subfield code=""l"">loader.pl-001-001</subfield>
+  </datafield>
+  <datafield tag=""FMT"" ind1="" "" ind2="" "">
+    <subfield code=""a"">BK</subfield>
+  </datafield>
+  <datafield tag=""HOL"" ind1="" "" ind2="" "">
+    <subfield code=""0"">sdr-miu000000312</subfield>
+    <subfield code=""a"">MiU</subfield>
+    <subfield code=""b"">SDR</subfield>
+    <subfield code=""c"">MIU</subfield>
+    <subfield code=""p"">mdp.39015005499622</subfield>
+    <subfield code=""s"">MIU</subfield>
+    <subfield code=""1"">000000312</subfield>
+  </datafield>
+  <datafield tag=""974"" ind1="" "" ind2="" "">
+    <subfield code=""d"">20141217</subfield>
+    <subfield code=""s"">google</subfield>
+    <subfield code=""u"">mdp.39015005499622</subfield>
+  </datafield>
+</record>","{""leader"":""00989nam a22002771  4500"",""fields"":[{""001"":""mdp.39015005499622""},{""003"":""MiAaHDL""},{""005"":""20120717000000.0""},{""006"":""m        d        ""},{""007"":""cr bn ---auaua""},{""008"":""880715s1969    nyu          |00001 eng  ""},{""010"":{""ind1"":"" "",""ind2"":"" "",""subfields"":[{""a"":""75076963""}]}},{""035"":{""ind1"":"" "",""ind2"":"" "",""subfields"":[{""a"":""(MIU)000000312""}]}},{""035"":{""ind1"":"" "",""ind2"":"" "",""subfields"":[{""a"":""sdr-miu000000312""}]}},{""035"":{""ind1"":"" "",""ind2"":"" "",""subfields"":[{""a"":""(OCoLC)30263""}]}},{""035"":{""ind1"":"" "",""ind2"":"" "",""subfields"":[{""a"":""(CaOTULAS)159818388""}]}},{""035"":{""ind1"":"" "",""ind2"":"" "",""subfields"":[{""a"":""(RLIN)MIUG0030263-B""}]}},{""040"":{""ind1"":"" "",""ind2"":"" "",""subfields"":[{""a"":""DLC""},{""c"":""DLC""},{""d"":""MiU""}]}},{""050"":{""ind1"":""0"",""ind2"":"" "",""subfields"":[{""a"":""PZ4.S944""},{""b"":""De""},{""a"":""PS3569.U33""}]}},{""082"":{""ind1"":"" "",""ind2"":"" "",""subfields"":[{""a"":""813/.5/4""}]}},{""100"":{""ind1"":""1"",""ind2"":"" "",""subfields"":[{""a"":""Sukenick, Ronald.""}]}},{""245"":{""ind1"":""1"",""ind2"":""4"",""subfields"":[{""a"":""The death of the novel and other stories.""}]}},{""260"":{""ind1"":"" "",""ind2"":"" "",""subfields"":[{""a"":""New York,""},{""b"":""Dial Press,""},{""c"":""1969.""}]}},{""300"":{""ind1"":"" "",""ind2"":"" "",""subfields"":[{""a"":""175 p.""},{""c"":""24 cm.""}]}},{""500"":{""ind1"":"" "",""ind2"":"" "",""subfields"":[{""a"":""Two of these stories, The permanent crisis and What's your story, first appeared in Epoch, fall, 1960 and the Paris review, no. 44, fall, 1968, respectively.""}]}},{""505"":{""ind1"":""0"",""ind2"":"" "",""subfields"":[{""a"":""The permanent crisis.--Momentum.--The death of the novel.--Roast beef: A slice of life.--What's your story.--The birds.""}]}},{""538"":{""ind1"":"" "",""ind2"":"" "",""subfields"":[{""a"":""Mode of access: Internet.""}]}},{""542"":{""ind1"":"" "",""ind2"":"" "",""subfields"":[{""f"":""Copyright 1895 ""},{""g"":""1895""},{""i"":""1927 ""},{""k"":""London, Macmillan""},{""l"":""Public domain""},{""o"":""20061201175546""},{""p"":""GB ""}]}},{""CID"":{""ind1"":"" "",""ind2"":"" "",""subfields"":[{""a"":""000000312""}]}},{""DAT"":{""ind1"":""0"",""ind2"":"" "",""subfields"":[{""a"":""20120717104833.0""},{""b"":""20120717000000.0""}]}},{""DAT"":{""ind1"":""1"",""ind2"":"" "",""subfields"":[{""a"":""20120814121459.0""},{""b"":""2014-12-17T00:19:05Z""}]}},{""CAT"":{""ind1"":"" "",""ind2"":"" "",""subfields"":[{""a"":""SDR-MIU""},{""d"":""EX LIBRIS - ALEPH""},{""l"":""loader.pl-001-001""}]}},{""FMT"":{""ind1"":"" "",""ind2"":"" "",""subfields"":[{""a"":""BK""}]}},{""HOL"":{""ind1"":"" "",""ind2"":"" "",""subfields"":[{""0"":""sdr-miu000000312""},{""a"":""MiU""},{""b"":""SDR""},{""c"":""MIU""},{""p"":""mdp.39015005499622""},{""s"":""MIU""},{""1"":""000000312""}]}},{""974"":{""ind1"":"" "",""ind2"":"" "",""subfields"":[{""d"":""20141217""},{""s"":""google""},{""u"":""mdp.39015005499622""}]}}]}"
