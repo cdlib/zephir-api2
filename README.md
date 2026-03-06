@@ -25,12 +25,9 @@ uv sync
 
 **Set required environment variables** (see [Database configuration](#database-configuration) below), then **run the app:**
 
-```sh
-export FLASK_ENV=development
-export APP_PORT=8000
-export LOG_LEVEL=INFO
-export DATABASE_URI=mysql+mysqlconnector://user:pass@host/dbname
+Copy `env.template` to `.env` and update the `DATABASE_URI` variable.
 
+```sh
 uv run python -m gunicorn -c gunicorn_config.py
 ```
 
