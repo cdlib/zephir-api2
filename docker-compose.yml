@@ -38,6 +38,8 @@ services:
     ports:
       - "${APP_PORT:-8000}:${APP_PORT:-8000}"
     environment:
+      - APP_PORT=${APP_PORT:-8000}
+      - LOG_LEVEL=${LOG_LEVEL:-info}
       - DATABASE_URI=mysql+mysqlconnector://root:devpassword@mysql/zephir_dev
     depends_on:
       mysql:
