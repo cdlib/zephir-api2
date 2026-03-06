@@ -35,19 +35,6 @@ COPY . .
 CMD ["uv", "run", "pytest", "tests"]
 
 #
-# Test stage (with minor version updates)
-#
-FROM deps AS test-minor-update
-
-# Update to latest compatible versions and install dev dependencies
-RUN --mount=type=cache,target=/root/.cache/uv \
-    uv lock --upgrade && uv sync --no-install-project
-
-COPY . .
-
-CMD ["uv", "run", "pytest", "tests"]
-
-#
 # Production stage
 #
 FROM python:${IMAGE_TAG} AS production
@@ -55,14 +42,23 @@ FROM python:${IMAGE_TAG} AS production
 # Copy uv binary for runtime
 COPY --from=ghcr.io/astral-sh/uv:0.8.4 /uv /usr/local/bin/uv
 
+# Create an unprivileged user and group to run the application
+RUN groupadd --gid 1001 app && \
+    useradd --uid 1001 --gid app --no-create-home app
+
 WORKDIR /app
 
-ENV PYTHONUNBUFFERED=1
+ENV PYTHONUNBUFFERED=1 \
+    # Deps are pre-installed in the venv; no cache needed at runtime
+    UV_NO_CACHE=1
 
-# Copy the virtualenv from the deps stage
-COPY --from=deps /app/.venv /app/.venv
+# Copy the virtualenv from the deps stage with correct ownership
+COPY --from=deps --chown=app:app /app/.venv /app/.venv
 
-# Copy application source
-COPY . .
+# Copy application source with correct ownership
+COPY --chown=app:app . .
+
+# Switch to the unprivileged user before starting the process
+USER app
 
 CMD ["uv", "run", "python", "-m", "gunicorn", "-c", "gunicorn_config.py"]
