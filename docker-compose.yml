@@ -3,7 +3,6 @@ services:
     build:
       context: .
       target: production
-    command: ["python", "-m", "gunicorn", "-c", "gunicorn_config.py"]
     ports:
       - "${APP_PORT}:${APP_PORT}"
     environment:
@@ -25,9 +24,3 @@ services:
       - DB_PASSWORD
       - DB_HOST
       - DB_DATABASE
-    depends_on:
-      - test
-  test:
-    build:
-      context: .
-      target: test

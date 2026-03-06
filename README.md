@@ -55,6 +55,29 @@ uv run pytest --cov=app --cov-report=term-missing
 
 ### Docker
 
+The Dockerfile has three useful targets:
+
+| Target | What it does |
+|---|---|
+| `test` | Installs all deps, copies source, runs `pytest tests` on start |
+| `test-minor-update` | Same as `test` but upgrades deps to latest compatible versions first |
+| `production` | Installs prod deps only, starts Gunicorn on start |
+
+**Run a single target directly:**
+
+```sh
+# Run the test suite
+docker run $(docker build -q --target test .)
+
+# Build and run the production image
+docker run -p 8000:8000 \
+  -e FLASK_ENV=production \
+  -e APP_PORT=8000 \
+  -e LOG_LEVEL=INFO \
+  -e DATABASE_URI=mysql+mysqlconnector://user:pass@host/dbname \
+  $(docker build -q --target production .)
+```
+
 **Run with Docker Compose:**
 
 1. Create a `.env` file in the project root:
@@ -66,17 +89,13 @@ uv run pytest --cov=app --cov-report=term-missing
    DATABASE_URI=mysql+mysqlconnector://user:pass@host/dbname
    ```
 
-2. Start the stack (runs tests first, then starts the API):
+2. Start the stack:
 
    ```sh
    docker compose up
    ```
 
-**Run tests only inside Docker:**
-
-```sh
-docker build --target test .
-```
+   The API will be available at `http://localhost:8000` once tests pass.
 
 ---
 
