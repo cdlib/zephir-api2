@@ -1,3 +1,5 @@
+from urllib.parse import urlparse
+
 import markdown
 from flask import Blueprint, current_app, jsonify, make_response, redirect, request, url_for
 from markupsafe import Markup
@@ -39,11 +41,17 @@ def documentation():
     with open('API.md', 'r') as file:
         content = file.read()
 
-    # Convert Markdown to HTML
-    html_content = markdown.markdown(content.replace('http://localhost/', request.url_root))
+    # Sanitize the URL root by reconstructing it from only the scheme and netloc
+    # This avoids a (very unlikely) injection vulnerability
+    parsed = urlparse(request.url_root)
+    safe_url_root = f"{parsed.scheme}://{parsed.netloc}/"
 
-    # Return HTML content. The Markup class prevents Flask from escaping HTML content.
-    return Markup(html_content)
+    # Convert Markdown to HTML
+    html_content = markdown.markdown(content.replace('http://localhost/', safe_url_root))
+
+    # Ignore Bandit security warning
+    # The content is safe: it comes from a controlled Markdown file and the URL is sanitized.
+    return Markup(html_content) # nosec B704
 
 
 @blueprint.route('/ping')
