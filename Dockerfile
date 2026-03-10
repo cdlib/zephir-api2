@@ -1,4 +1,4 @@
-ARG IMAGE_TAG=3.13-slim-bullseye
+ARG IMAGE_TAG=3.13-slim-trixie
 
 #
 # Python dependencies stage
