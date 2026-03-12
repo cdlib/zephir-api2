@@ -108,18 +108,18 @@ The app resolves the database connection from environment variables in priority 
 
     `aws sso login --profile <profile_for_env>`
 
-3. Build a fresh ECR image from the latest code and push to ECR
+3. Build a fresh Docker image from the latest code and push it to ECR
 
-    Valid environments are `dev`, `stg`, and `prd`.
+    The image will automatically be tagged with `latest` and the current commit hash.
 
-    `uv run --directory deployment sh scripts/ecr_push.sh <env>`
+    `uv run sh deployment/scripts/ecr_push.sh <env>`
 
-4. Deploy! Only resources which have changed will be redeployed. To deploy the latest container you must provide an unique image tag (i.e. the SHA). Using `latest` will not cause a redeploy if the previously deployed image was also on that tag.
+4. Deploy! Only resources which have changed will be redeployed. To deploy the latest container you should provide a unique image tag (i.e. the commit hash). Using `latest` will not trigger a redeploy if the previously deployment used the same tag.
 
-    `uv run --directory deployment sh scripts/deploy.sh <env> <image_tag>`
+    `uv run sh deployment/scripts/deploy.sh <env> <image_tag>`
 
 ### Tear down
 
 **CAUTION! CAUTION! This command will destroy all related AWS resources**
 
-`uv run --directory deployment sh scripts/destroy.sh <env>`.
+`uv run sh deployment/scripts/destroy.sh <env>`.

@@ -4,8 +4,9 @@ set -euo pipefail
 
 ENVIRONMENT=$1
 
-REPO_ROOT="$(dirname "$0")/../.."
-DEPLOYMENT_ROOT="$REPO_ROOT/deployment"
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+cd "$SCRIPT_DIR/.."  # run from deployment/ so sceptre resolves config/ and templates/
+REPO_ROOT="$SCRIPT_DIR/../.."
 
 # Quietly launch ECR if it doesn't exist
 sceptre launch -y $ENVIRONMENT/ecr.yaml > /dev/null 2>&1
