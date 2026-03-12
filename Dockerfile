@@ -5,6 +5,11 @@ ARG IMAGE_TAG=3.13-slim-trixie
 #
 FROM python:${IMAGE_TAG} AS deps
 
+# Apply latest security patches
+RUN apt-get update && \
+    apt-get upgrade -y && \
+    rm -rf /var/lib/apt/lists/*
+
 # Copy uv binary for dependency management
 COPY --from=ghcr.io/astral-sh/uv:0.8.4 /uv /usr/local/bin/uv
 
@@ -38,6 +43,11 @@ CMD ["uv", "run", "pytest", "tests"]
 # Production stage
 #
 FROM python:${IMAGE_TAG} AS production
+
+# Apply latest security patches
+RUN apt-get update && \
+    apt-get upgrade -y && \
+    rm -rf /var/lib/apt/lists/*
 
 # Copy uv binary for runtime
 COPY --from=ghcr.io/astral-sh/uv:0.8.4 /uv /usr/local/bin/uv
