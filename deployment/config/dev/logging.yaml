@@ -1,0 +1,6 @@
+template:
+  path: logging.yaml
+  type: file
+
+parameters:
+  LogGroupName: "{{ base_name }}-{{ environment }}-log-group"

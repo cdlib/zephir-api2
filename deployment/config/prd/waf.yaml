@@ -1,0 +1,11 @@
+template:
+  path: waf.yaml
+  type: file
+
+dependencies:
+  - prd/network.yaml
+
+parameters:
+  WebACLName: "{{ base_name }}-{{ environment }}-waf-webacl"
+  WebACLMetricName: "{{ base_name }}-{{ environment }}-waf-webacl-metric"
+  LoadBalancerArn: !stack_output prd/network.yaml::LoadBalancerARN

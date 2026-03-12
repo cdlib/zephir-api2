@@ -1,0 +1,151 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: WAF for Zephir API
+
+
+Parameters:
+  WebACLName:
+    Type: String
+  WebACLMetricName:
+    Type: String
+  LoadBalancerArn:
+    Type: String
+
+Resources:
+  WebACL:
+    Type: AWS::WAFv2::WebACL
+    Properties: 
+      Name: !Ref WebACLName
+      DefaultAction:
+        Allow: {}
+      Scope: REGIONAL
+      VisibilityConfig:
+        CloudWatchMetricsEnabled: true
+        MetricName: !Ref WebACLMetricName
+        SampledRequestsEnabled: true
+      Rules:
+        - Name: AWS-AWSManagedRulesAmazonIpReputationList
+          OverrideAction:
+            None: {}
+          Priority: 0
+          Statement:
+            ManagedRuleGroupStatement:
+              Name: AWSManagedRulesAmazonIpReputationList
+              RuleActionOverrides:
+              - ActionToUse:
+                  Block: {}
+                Name: AWSManagedIPDDoSList
+              VendorName: AWS
+          VisibilityConfig:
+            CloudWatchMetricsEnabled: true
+            MetricName: AWS-AWSManagedRulesAmazonIpReputationList
+            SampledRequestsEnabled: true
+        - Name: AWS-AWSManagedRulesKnownBadInputsRuleSet
+          OverrideAction:
+            None: {}
+          Priority: 2
+          Statement:
+            ManagedRuleGroupStatement:
+              Name: AWSManagedRulesKnownBadInputsRuleSet
+              VendorName: AWS
+          VisibilityConfig:
+            CloudWatchMetricsEnabled: true
+            MetricName: AWS-AWSManagedRulesKnownBadInputsRuleSet
+            SampledRequestsEnabled: true
+        - Name: AWS-AWSManagedRulesLinuxRuleSet
+          OverrideAction:
+            None: {}
+          Priority: 3
+          Statement:
+            ManagedRuleGroupStatement:
+              Name: AWSManagedRulesLinuxRuleSet
+              VendorName: AWS
+          VisibilityConfig:
+            CloudWatchMetricsEnabled: true
+            MetricName: AWS-AWSManagedRulesLinuxRuleSet
+            SampledRequestsEnabled: true
+        - Action:
+            Block: {}
+          Name: wordpress
+          Priority: 8
+          Statement:
+            RegexMatchStatement:
+              FieldToMatch:
+                UriPath: {}
+              RegexString: (\/wp-content\/|\/wp-config\/|\/wordpress\/|\/wp-admin\/|\/wp-includes\/|\/wp-json\/)
+              TextTransformations:
+              - Priority: 0
+                Type: NONE
+          VisibilityConfig:
+            CloudWatchMetricsEnabled: true
+            MetricName: wordpress
+            SampledRequestsEnabled: true
+        - Action:
+            Block: {}
+          Name: phpcgi
+          Priority: 9
+          Statement:
+            RegexMatchStatement:
+              FieldToMatch:
+                UriPath: {}
+              RegexString: (\/cgi-bin\/|\.php)
+              TextTransformations:
+              - Priority: 0
+                Type: NONE
+          VisibilityConfig:
+            CloudWatchMetricsEnabled: true
+            MetricName: phpcgi
+            SampledRequestsEnabled: true
+        - Action:
+            Block: {}
+          Name: dotfile
+          Priority: 10
+          Statement:
+            RegexMatchStatement:
+              FieldToMatch:
+                UriPath: {}
+              RegexString: (boot\.ini|win\.ini|\.env)
+              TextTransformations:
+              - Priority: 0
+                Type: NONE
+          VisibilityConfig:
+            CloudWatchMetricsEnabled: true
+            MetricName: dotfile
+            SampledRequestsEnabled: true
+        - Action:
+            Block: {}
+          Name: unix
+          Priority: 11
+          Statement:
+            RegexMatchStatement:
+              FieldToMatch:
+                UriPath: {}
+              RegexString: (\/etc\/passwd|%2Fpasswd)
+              TextTransformations:
+              - Priority: 0
+                Type: NONE
+          VisibilityConfig:
+            CloudWatchMetricsEnabled: true
+            MetricName: unix
+            SampledRequestsEnabled: true
+        - Action:
+            Block: {}
+          Name: escape
+          Priority: 12
+          Statement:
+            RegexMatchStatement:
+              FieldToMatch:
+                UriPath: {}
+              RegexString: (\\\\\\\\|\/\/\/\/\/)
+              TextTransformations:
+              - Priority: 0
+                Type: NONE
+          VisibilityConfig:
+            CloudWatchMetricsEnabled: true
+            MetricName: escape
+            SampledRequestsEnabled: true
+
+  WebACLAssociation:
+    Type: AWS::WAFv2::WebACLAssociation
+    Properties:
+      ResourceArn: !Ref LoadBalancerArn
+      WebACLArn: !GetAtt WebACL.Arn

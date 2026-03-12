@@ -1,0 +1,25 @@
+template:
+  path: network.yaml.j2
+  type: file
+
+parameters:
+  LoadBalancerSecurityGroupName: "{{ base_name }}-{{ environment }}-load-balancer-security-group"
+  LoadBalancerName: "{{ base_name }}-{{ environment }}-load-balancer"
+  TargetGroupName: "{{ base_name }}-{{ environment }}-target-group"
+
+  VPCID: !stack_output_external cdl-d2d-prd-vpc-stack::vpc
+  SubnetIDs:
+    - !stack_output_external cdl-d2d-prd-defaultsubnet-stack::defaultsubnet2a
+    - !stack_output_external cdl-d2d-prd-defaultsubnet-stack::defaultsubnet2b
+    - !stack_output_external cdl-d2d-prd-defaultsubnet-stack::defaultsubnet2c
+  LoadBalancerSecurityGroupSources: !stack_attr sceptre_user_data.load_balancer_security_group_sources
+  
+  Route53ZoneID: !ssm /d2d/prd/route53-hosted-zone-id
+  Domain: d2d-zephir-api.d2dprd.cdlib.net
+  SubjectAlternativeDomains: # If the domain ends in .org, IAS should've validated it before.
+    - zephir.cdlib.org 
+  ApplicationPort: "8000"
+
+sceptre_user_data:
+  load_balancer_security_group_sources:
+    - 0.0.0.0/0

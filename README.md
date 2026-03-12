@@ -96,15 +96,30 @@ The app resolves the database connection from environment variables in priority 
 
 ---
 
-## Dependency Management
+## Deploying to AWS
 
-This project uses [uv](https://docs.astral.sh/uv/) for dependency management.
+### Deploy latest
 
-| Command | Purpose |
-|---|---|
-| `uv sync` | Install all dependencies (prod + dev) |
-| `uv sync --no-dev` | Install production dependencies only |
-| `uv add <package>` | Add a new runtime dependency |
-| `uv add --dev <package>` | Add a new dev dependency |
-| `uv lock --upgrade` | Update all dependencies within version constraints |
-| `uv tree --outdated` | List dependencies with available updates |
+1. Set the AWS profile you will use to run deployment commands (typically `cdl-d2d-dev` or `cdl-d2d-prod`)
+
+    `export AWS_PROFILE=<profile_for_env>`
+
+2. Login to AWS with the appropriate profile (Credentials expire after 12 hours.)
+
+    `aws sso login --profile <profile_for_env>`
+
+3. Build a fresh Docker image from the latest code and push it to ECR
+
+    The image will automatically be tagged with `latest` and the current commit hash.
+
+    `uv run sh deployment/scripts/ecr_push.sh <env>`
+
+4. Deploy! Only resources which have changed will be redeployed. To deploy the latest container you should provide a unique image tag (i.e. the commit hash). Using `latest` will not trigger a redeploy if the previously deployment used the same tag.
+
+    `uv run sh deployment/scripts/deploy.sh <env> <image_tag>`
+
+### Tear down
+
+**CAUTION! CAUTION! This command will destroy all related AWS resources**
+
+`uv run sh deployment/scripts/destroy.sh <env>`.

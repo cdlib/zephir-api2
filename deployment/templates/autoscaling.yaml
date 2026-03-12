@@ -1,0 +1,40 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Auto Scaling for Zephir API ECS Service
+
+
+Parameters:
+  # ECSAutoScalingPlanName:
+  #   Type: String
+  ECSClusterName:
+    Type: String
+  ECSServiceName:
+    Type: String
+
+  ECSCloudFormationStackARN:
+    Type: String
+  
+  MinCapacity:
+    Type: Number
+  MaxCapacity:
+    Type: Number
+
+
+Resources:
+  ECSAutoScalingPlan:
+    Type: AWS::AutoScalingPlans::ScalingPlan
+    Properties:
+      # ScalingPlanName: !Ref ECSAutoScalingPlanName
+      ApplicationSource:
+        CloudFormationStackARN: !Ref ECSCloudFormationStackARN
+      ScalingInstructions:
+        - ServiceNamespace: ecs
+          ResourceId: !Sub "service/${ECSClusterName}/${ECSServiceName}"
+          ScalableDimension: ecs:service:DesiredCount
+          MinCapacity: !Ref MinCapacity
+          MaxCapacity: !Ref MaxCapacity
+          TargetTrackingConfigurations:
+            - PredefinedScalingMetricSpecification:
+                PredefinedScalingMetricType: ECSServiceAverageCPUUtilization
+              TargetValue: 70.0
+              ScaleInCooldown: 60
+              ScaleOutCooldown: 60

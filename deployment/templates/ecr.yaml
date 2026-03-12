@@ -1,0 +1,42 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: ECR repository Zephir API
+
+
+Parameters:
+  RepositoryName:
+    Type: String
+
+
+Resources:
+  Repository:
+    Type: AWS::ECR::Repository
+    DeletionPolicy: Retain
+    UpdateReplacePolicy: Retain
+    Properties:
+      LifecyclePolicy:
+        LifecyclePolicyText: >
+          { "rules": [
+              { "rulePriority": 1,
+                "description": "Expire all but latest 4 images",
+                "selection": {
+                  "tagStatus": "any",
+                  "countType": "imageCountMoreThan",
+                  "countNumber": 4
+                },
+                "action": {
+                  "type": "expire"
+                }
+              }
+          ]}
+      RepositoryName: !Ref RepositoryName
+
+
+Outputs:
+  RepositoryName:
+    Value: !Ref RepositoryName
+
+  RepositoryURI:
+    Value: !GetAtt Repository.RepositoryUri
+
+  RepositoryARN:
+    Value: !GetAtt Repository.Arn  

@@ -1,0 +1,9 @@
+# profile: cdl-d2d-dev
+base_name: {{ project_code }}
+environment: dev
+
+stack_tags:
+  Program: "d2d"
+  Service: "zephir"
+  Subservice: "api"
+  Environment: "dev"

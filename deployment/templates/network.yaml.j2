@@ -1,0 +1,142 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: Network Stack for Zephir API
+
+
+Parameters:
+  LoadBalancerSecurityGroupName:
+    Type: String
+  LoadBalancerName:
+    Type: String
+  TargetGroupName:
+    Type: String
+
+  VPCID:
+    Type: AWS::EC2::VPC::Id
+  SubnetIDs:
+    Type: List<AWS::EC2::Subnet::Id>
+  LoadBalancerSecurityGroupSources:
+    Type: CommaDelimitedList
+
+  Route53ZoneID:
+    Type: String
+  Domain:
+    Type: String
+  SubjectAlternativeDomains:
+    Type: CommaDelimitedList
+    Default: ""
+  ApplicationPort:
+    Type: Number
+
+
+Conditions:
+  HasSubjectAlternativeDomains:
+    !Not [!Equals [!Join [",", !Ref SubjectAlternativeDomains], ""]]
+
+
+Resources:
+  SSLCertificate:
+    Type: AWS::CertificateManager::Certificate
+    Properties:
+      DomainName: !Ref Domain
+      DomainValidationOptions:
+        - DomainName: !Ref Domain
+          HostedZoneId: !Ref Route53ZoneID
+      ValidationMethod: DNS
+      SubjectAlternativeNames:
+        Fn::If:
+          - HasSubjectAlternativeDomains
+          - !Ref SubjectAlternativeDomains
+          - !Ref AWS::NoValue 
+  
+  MainSiteDNS:
+    Type: AWS::Route53::RecordSet
+    Properties:
+      HostedZoneId: !Ref Route53ZoneID
+      Type: A
+      Name: !Ref Domain
+      AliasTarget:
+        DNSName: !GetAtt LoadBalancer.DNSName
+        HostedZoneId: !GetAtt LoadBalancer.CanonicalHostedZoneID
+
+  LoadBalancerSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Security group for the Load Balancer
+      GroupName: !Ref LoadBalancerSecurityGroupName
+      VpcId: !Ref VPCID
+      SecurityGroupIngress:
+        {% for source in sceptre_user_data.load_balancer_security_group_sources %}
+        {% for port in [80, 443] %}
+        - {% if source[:2] == "pl" %}
+          SourcePrefixListId: {{ source }}
+          {% else %}
+          CidrIp: {{ source }}
+          {% endif %}
+          IpProtocol: tcp
+          FromPort: {{ port }}
+          ToPort: {{ port }}
+        {% endfor %}
+        {% endfor %}
+
+  LoadBalancer:
+    Type: AWS::ElasticLoadBalancingV2::LoadBalancer
+    Properties:
+      Name: !Ref LoadBalancerName
+      Subnets: !Ref SubnetIDs
+      SecurityGroups:
+        - !GetAtt LoadBalancerSecurityGroup.GroupId
+
+  ListenerHTTP:
+    Type: AWS::ElasticLoadBalancingV2::Listener
+    Properties:
+      DefaultActions:
+        - Type: redirect
+          RedirectConfig:
+            Port: 443
+            Protocol: HTTPS
+            StatusCode: HTTP_301
+      LoadBalancerArn: !Ref LoadBalancer
+      Port: 80
+      Protocol: HTTP
+
+  ListenerHTTPS:
+    Type: AWS::ElasticLoadBalancingV2::Listener
+    Properties:
+      DefaultActions:
+        - TargetGroupArn: !GetAtt TargetGroup.TargetGroupArn
+          Type: forward
+      LoadBalancerArn: !Ref LoadBalancer
+      Port: 443
+      Protocol: HTTPS
+      Certificates:
+        - CertificateArn: !Ref SSLCertificate
+      SslPolicy: ELBSecurityPolicy-TLS13-1-2-2021-06
+
+  TargetGroup:
+    Type: AWS::ElasticLoadBalancingV2::TargetGroup
+    Properties:
+      HealthCheckIntervalSeconds: 30
+      # will look for a 200 status code by default unless specified otherwise
+      HealthCheckPath: "/api/ping"
+      HealthCheckTimeoutSeconds: 5
+      UnhealthyThresholdCount: 2
+      HealthyThresholdCount: 2
+      Name: !Ref TargetGroupName
+      Port: !Ref ApplicationPort
+      Protocol: HTTP
+      TargetGroupAttributes:
+        - Key: deregistration_delay.timeout_seconds
+          Value: 60 # default is 300
+      TargetType: ip
+      VpcId: !Ref VPCID
+
+
+Outputs:
+  LoadBalancerSecurityGroupID:
+    Value: !GetAtt LoadBalancerSecurityGroup.GroupId
+  
+  TargetGroupARN:
+    Value: !GetAtt TargetGroup.TargetGroupArn
+
+  LoadBalancerARN:
+    Value: !Ref LoadBalancer
