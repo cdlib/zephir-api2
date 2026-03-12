@@ -1,2 +1,17 @@
 project_code: d2d-zephir-api
 region: us-west-2
+
+sceptre_user_data_inheritance: merge
+stack_tags_inheritance: merge
+
+sceptre_user_data:
+  program: d2d
+  service: zephir
+  subservice: api
+  repository: https://github.com/cdlib/zephir-api2.git
+
+stack_tags:
+  program: !stack_attr sceptre_user_data.program
+  service: !stack_attr sceptre_user_data.service
+  subservice: !stack_attr sceptre_user_data.subservice
+  repository: !stack_attr sceptre_user_data.repository

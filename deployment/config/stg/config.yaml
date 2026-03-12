@@ -1,12 +1,13 @@
+profile: cdl-d2d-dev
+
 sceptre_role: arn:aws:iam::445017934155:role/sceptre/d2d-dev-sceptre-role
 cloudformation_service_role: arn:aws:iam::445017934155:role/sceptre/d2d-zephir-api-stg-cloudformation-service-role
 
-# Custom parameters
-base_name: {{ project_code }}
-environment: stg
+sceptre_user_data:
+  environment: stg
+  resource_name_prefix: "{{ sceptre_user_data.program }}-{{ sceptre_user_data.service }}-{{ sceptre_user_data.subservice }}-stg"
+  port: "8000"
+  url_authority: "{{ sceptre_user_data.program }}-{{ sceptre_user_data.service }}-{{ sceptre_user_data.subservice }}-stg.d2ddev.cdlib.net"
 
 stack_tags:
-  Program: "d2d"
-  Service: "zephir"
-  Subservice: "api"
-  Environment: "stg"
+  Environment: !stack_attr sceptre_user_data.environment

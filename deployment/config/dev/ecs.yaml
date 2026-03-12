@@ -1,43 +1,37 @@
 template:
-  path: ecs.yaml
+  path: ecs.yaml.j2
   type: file
 
 dependencies:
-  - dev/ecr.yaml
-  - dev/logging.yaml
-  - dev/network.yaml
+  - "{{ sceptre_user_data.environment }}/ecr.yaml"
+  - "{{ sceptre_user_data.environment }}/logging.yaml"
+  - "{{ sceptre_user_data.environment }}/network.yaml"
 
 parameters:
-  ECSServiceSecurityGroupName: "{{ base_name }}-{{ environment }}-ecs-service-security-group"
-  ECSClusterName: "{{ base_name }}-{{ environment }}-ecs-cluster"
-  ContainerName: "{{ base_name }}-{{ environment }}-container"
-  TaskDefinitionFamilyName: "{{ base_name }}-{{ environment }}-ecs-task-definition"
-  ECSTaskRoleName: "{{ base_name }}-{{ environment }}-ecs-task-role"
-  ECSTaskExecutionRoleName: "{{ base_name }}-{{ environment }}-ecs-task-execution-role"
-  ECSServiceName: "{{ base_name }}-{{ environment }}-ecs-service"
+  ContainerName: "{{ sceptre_user_data.resource_name_prefix }}-container"
   {% if var.image_tag | default(False) %}
   ImageTag: "{{ var.image_tag }}"
   {% else %}
   ImageTag: latest
   {% endif %}
-  
+
   VPCID: !stack_output_external cdl-d2d-dev-vpc-stack::vpc
   SubnetIDs:
     - !stack_output_external cdl-d2d-dev-defaultsubnet-stack::defaultsubnet2a
     - !stack_output_external cdl-d2d-dev-defaultsubnet-stack::defaultsubnet2b
     - !stack_output_external cdl-d2d-dev-defaultsubnet-stack::defaultsubnet2c
 
-  LoadBalancerSecurityGroupID: !stack_output dev/network.yaml::LoadBalancerSecurityGroupID
-  TargetGroupARN: !stack_output dev/network.yaml::TargetGroupARN
+  LoadBalancerSecurityGroupID: !stack_output "{{ sceptre_user_data.environment }}/network.yaml::LoadBalancerSecurityGroupID"
+  TargetGroupARN: !stack_output "{{ sceptre_user_data.environment }}/network.yaml::TargetGroupARN"
 
-  RepositoryURI: !stack_output dev/ecr.yaml::RepositoryURI
-  RepositoryARN: !stack_output dev/ecr.yaml::RepositoryARN
-  
-  LogGroupID: !stack_output dev/logging.yaml::LogGroupID
-  LogGroupArn: !stack_output dev/logging.yaml::LogGroupArn
+  RepositoryURI: !stack_output "{{ sceptre_user_data.environment }}/ecr.yaml::RepositoryURI"
+  RepositoryARN: !stack_output "{{ sceptre_user_data.environment }}/ecr.yaml::RepositoryARN"
 
-  ApplicationPort: "8000"
-  
+  LogGroupID: !stack_output "{{ sceptre_user_data.environment }}/logging.yaml::LogGroupID"
+  LogGroupArn: !stack_output "{{ sceptre_user_data.environment }}/logging.yaml::LogGroupArn"
+
+  ApplicationPort: "{{ sceptre_user_data.port }}"
+
   FlaskEnvironment: development
   LogLevel: DEBUG
 

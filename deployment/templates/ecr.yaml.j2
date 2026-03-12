@@ -1,11 +1,5 @@
 AWSTemplateFormatVersion: 2010-09-09
-Description: ECR repository Zephir API
-
-
-Parameters:
-  RepositoryName:
-    Type: String
-
+Description: ECR repository for Zephir API
 
 Resources:
   Repository:
@@ -28,15 +22,12 @@ Resources:
                 }
               }
           ]}
-      RepositoryName: !Ref RepositoryName
-
+      RepositoryName: "{{ sceptre_user_data.resource_name_prefix }}"
 
 Outputs:
   RepositoryName:
-    Value: !Ref RepositoryName
-
+    Value: !Ref Repository
   RepositoryURI:
     Value: !GetAtt Repository.RepositoryUri
-
   RepositoryARN:
-    Value: !GetAtt Repository.Arn  
+    Value: !GetAtt Repository.Arn

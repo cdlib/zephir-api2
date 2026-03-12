@@ -1,15 +1,7 @@
 AWSTemplateFormatVersion: 2010-09-09
 Description: Network Stack for Zephir API
 
-
 Parameters:
-  LoadBalancerSecurityGroupName:
-    Type: String
-  LoadBalancerName:
-    Type: String
-  TargetGroupName:
-    Type: String
-
   VPCID:
     Type: AWS::EC2::VPC::Id
   SubnetIDs:
@@ -27,11 +19,9 @@ Parameters:
   ApplicationPort:
     Type: Number
 
-
 Conditions:
   HasSubjectAlternativeDomains:
     !Not [!Equals [!Join [",", !Ref SubjectAlternativeDomains], ""]]
-
 
 Resources:
   SSLCertificate:
@@ -46,8 +36,8 @@ Resources:
         Fn::If:
           - HasSubjectAlternativeDomains
           - !Ref SubjectAlternativeDomains
-          - !Ref AWS::NoValue 
-  
+          - !Ref AWS::NoValue
+
   MainSiteDNS:
     Type: AWS::Route53::RecordSet
     Properties:
@@ -62,7 +52,7 @@ Resources:
     Type: AWS::EC2::SecurityGroup
     Properties:
       GroupDescription: Security group for the Load Balancer
-      GroupName: !Ref LoadBalancerSecurityGroupName
+      GroupName: "{{ sceptre_user_data.resource_name_prefix }}-load-balancer-security-group"
       VpcId: !Ref VPCID
       SecurityGroupIngress:
         {% for source in sceptre_user_data.load_balancer_security_group_sources %}
@@ -81,7 +71,7 @@ Resources:
   LoadBalancer:
     Type: AWS::ElasticLoadBalancingV2::LoadBalancer
     Properties:
-      Name: !Ref LoadBalancerName
+      Name: "{{ sceptre_user_data.resource_name_prefix }}-load-balancer"
       Subnets: !Ref SubnetIDs
       SecurityGroups:
         - !GetAtt LoadBalancerSecurityGroup.GroupId
@@ -116,27 +106,23 @@ Resources:
     Type: AWS::ElasticLoadBalancingV2::TargetGroup
     Properties:
       HealthCheckIntervalSeconds: 30
-      # will look for a 200 status code by default unless specified otherwise
       HealthCheckPath: "/api/ping"
       HealthCheckTimeoutSeconds: 5
       UnhealthyThresholdCount: 2
       HealthyThresholdCount: 2
-      Name: !Ref TargetGroupName
+      Name: "{{ sceptre_user_data.resource_name_prefix }}-target-group"
       Port: !Ref ApplicationPort
       Protocol: HTTP
       TargetGroupAttributes:
         - Key: deregistration_delay.timeout_seconds
-          Value: 60 # default is 300
+          Value: 60
       TargetType: ip
       VpcId: !Ref VPCID
-
 
 Outputs:
   LoadBalancerSecurityGroupID:
     Value: !GetAtt LoadBalancerSecurityGroup.GroupId
-  
   TargetGroupARN:
     Value: !GetAtt TargetGroup.TargetGroupArn
-
   LoadBalancerARN:
     Value: !Ref LoadBalancer

@@ -1,9 +1,10 @@
 # profile: cdl-d2d-prd
-base_name: {{ project_code }}
-environment: prd
+
+sceptre_user_data:
+  environment: prd
+  resource_name_prefix: "{{ sceptre_user_data.program }}-{{ sceptre_user_data.service }}-{{ sceptre_user_data.subservice }}-prd"
+  port: "8000"
+  url_authority: "{{ sceptre_user_data.program }}-{{ sceptre_user_data.service }}-{{ sceptre_user_data.subservice }}.d2dprd.cdlib.net"
 
 stack_tags:
-  Program: "d2d"
-  Service: "zephir"
-  Subservice: "api"
-  Environment: "prd"
+  Environment: !stack_attr sceptre_user_data.environment
