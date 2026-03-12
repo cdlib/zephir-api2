@@ -1,0 +1,16 @@
+template:
+  path: autoscaling.yaml
+  type: file
+
+dependencies:
+  - stg/ecs.yaml
+
+parameters:
+  # ECSAutoScalingPlanName: "{{ base_name }}-{{ environment }}-ecs-auto-scaling-plan"
+  ECSClusterName: !stack_output stg/ecs.yaml::ECSClusterName
+  ECSServiceName: !stack_output stg/ecs.yaml::ECSServiceName
+
+  ECSCloudFormationStackARN: !stack_output stg/ecs.yaml::ECSCloudFormationStackARN
+
+  MinCapacity: "1"
+  MaxCapacity: "3"

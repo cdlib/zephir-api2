@@ -1,0 +1,12 @@
+sceptre_role: arn:aws:iam::445017934155:role/sceptre/d2d-dev-sceptre-role
+cloudformation_service_role: arn:aws:iam::445017934155:role/sceptre/d2d-zephir-api-stg-cloudformation-service-role
+
+# Custom parameters
+base_name: {{ project_code }}
+environment: stg
+
+stack_tags:
+  Program: "d2d"
+  Service: "zephir"
+  Subservice: "api"
+  Environment: "stg"

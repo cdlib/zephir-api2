@@ -1,0 +1,9 @@
+# profile: cdl-d2d-prd
+base_name: {{ project_code }}
+environment: prd
+
+stack_tags:
+  Program: "d2d"
+  Service: "zephir"
+  Subservice: "api"
+  Environment: "prd"

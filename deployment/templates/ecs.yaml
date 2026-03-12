@@ -1,0 +1,201 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: Service Stack for Zephir API
+
+
+Parameters:
+  ECSServiceSecurityGroupName:
+    Type: String
+  ECSClusterName:
+    Type: String
+  ContainerName:
+    Type: String
+  TaskDefinitionFamilyName:
+    Type: String
+  ECSTaskRoleName:
+    Type: String
+  ECSTaskExecutionRoleName:
+    Type: String
+  ECSServiceName:
+    Type: String
+  ImageTag:
+    Type: String
+  
+  VPCID:
+    Type: AWS::EC2::VPC::Id
+  SubnetIDs:
+    Type: List<AWS::EC2::Subnet::Id>
+
+  LoadBalancerSecurityGroupID:
+    Type: AWS::EC2::SecurityGroup::Id
+  TargetGroupARN:
+    Type: String
+
+  RepositoryURI:
+    Type: String
+  RepositoryARN:
+    Type: String
+
+  LogGroupID:
+    Type: String
+  LogGroupArn:
+    Type: String
+
+  FlaskEnvironment:
+    Type: String
+  LogLevel:
+    Type: String
+  ApplicationPort:
+    Type: Number
+
+  DatabaseCredentialsSecretName:
+    Type: String
+  DatabaseSecurityGroupID:
+    Type: AWS::EC2::SecurityGroup::Id
+
+Resources:
+  ECSServiceSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Security group for ECS tasks
+      GroupName: !Ref ECSServiceSecurityGroupName
+      SecurityGroupIngress:
+        - SourceSecurityGroupId: !Ref LoadBalancerSecurityGroupID
+          IpProtocol: tcp
+          FromPort: !Ref ApplicationPort
+          ToPort: !Ref ApplicationPort
+      VpcId: !Ref VPCID
+
+  ECSCluster:
+    Type: AWS::ECS::Cluster
+    Properties:
+      ClusterName: !Ref ECSClusterName
+
+  TaskDefinition:
+    Type: AWS::ECS::TaskDefinition
+    Properties:
+      ContainerDefinitions:
+        - Essential: true
+          Image: !Sub "${RepositoryURI}:${ImageTag}"
+          Name: !Ref ContainerName
+          LogConfiguration:
+            LogDriver: awslogs
+            Options:
+              awslogs-group: !Ref LogGroupID
+              awslogs-region: !Ref AWS::Region
+              awslogs-stream-prefix: !Ref ContainerName
+          PortMappings:
+            - AppProtocol: http
+              ContainerPort: !Ref ApplicationPort
+              HostPort: !Ref ApplicationPort
+              Protocol: tcp
+          Environment:
+            - Name: FLASK_ENV
+              Value: !Ref FlaskEnvironment
+            - Name: LOG_LEVEL
+              Value: !Ref LogLevel
+            - Name: APP_PORT
+              Value: !Ref ApplicationPort
+            - Name: DATABASE_CREDENTIALS_SECRET_NAME
+              Value: !Ref DatabaseCredentialsSecretName
+          Command: 
+            - "uv"
+            - "run"
+            - "python"
+            - "-m"
+            - "gunicorn"
+            - "-c"
+            - "gunicorn_config.py"
+      Cpu: "256"
+      TaskRoleArn: !Ref ECSTaskRole
+      ExecutionRoleArn: !Ref ECSTaskExecutionRole
+      Family: !Ref TaskDefinitionFamilyName
+      Memory: "512"
+      NetworkMode: awsvpc
+      RequiresCompatibilities: 
+        - FARGATE
+
+  ECSTaskRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Ref ECSTaskRoleName
+      AssumeRolePolicyDocument:
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: ecs-tasks.amazonaws.com
+            Action: sts:AssumeRole
+      Policies:
+        - PolicyName: SecretsManager-Read
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - Effect: Allow
+                Action:
+                  - secretsmanager:GetSecretValue
+                  - secretsmanager:DescribeSecret
+                Resource: !Sub "arn:aws:secretsmanager:${AWS::Region}:${AWS::AccountId}:secret:${DatabaseCredentialsSecretName}-*"
+
+  ECSTaskExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Ref ECSTaskExecutionRoleName
+      AssumeRolePolicyDocument:
+        Statement:
+          - Effect: Allow
+            Principal: 
+              Service: ecs-tasks.amazonaws.com
+            Action: sts:AssumeRole
+      Policies:
+        - PolicyName: ECR-Pull
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - Effect: Allow
+                Action:
+                  - ecr:BatchCheckLayerAvailability
+                  - ecr:GetDownloadUrlForLayer
+                  - ecr:BatchGetImage
+                Resource: !Ref RepositoryARN
+              - Effect: Allow
+                Action: ecr:GetAuthorizationToken
+                Resource: '*'
+        - PolicyName: LogGroup-Log
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - Effect: Allow
+                Action:
+                  - logs:CreateLogStream
+                  - logs:PutLogEvents
+                Resource: !Ref LogGroupArn
+
+  ECSService:
+    Type: AWS::ECS::Service
+    Properties:
+      Cluster: !Ref ECSCluster
+      LaunchType: FARGATE
+      DeploymentConfiguration:
+        DeploymentCircuitBreaker:
+          Enable: true
+          Rollback: true
+      NetworkConfiguration:
+        AwsvpcConfiguration:
+          AssignPublicIp: ENABLED
+          SecurityGroups: 
+            - !GetAtt ECSServiceSecurityGroup.GroupId
+            - !Ref DatabaseSecurityGroupID
+          Subnets: !Ref SubnetIDs
+      ServiceName: !Ref ECSServiceName
+      TaskDefinition: !Ref TaskDefinition
+      LoadBalancers:
+        - ContainerName: !Ref ContainerName
+          ContainerPort: !Ref ApplicationPort
+          TargetGroupArn: !Ref TargetGroupARN
+
+Outputs:
+  ECSClusterName:
+    Value: !Ref ECSCluster
+  ECSServiceName:
+    Value: !GetAtt ECSService.Name
+  ECSCloudFormationStackARN:
+    Value: !Ref AWS::StackId

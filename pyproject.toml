@@ -23,4 +23,6 @@ dev = [
     "ruff~=0.15",
     "pytest-cov~=7.0",
     "vulture~=2.15",
+    "sceptre>=4.5.3",
+    "sceptre-ssm-resolver>=1.2.2",
 ]

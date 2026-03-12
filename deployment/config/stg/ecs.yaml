@@ -1,0 +1,45 @@
+template:
+  path: ecs.yaml
+  type: file
+
+dependencies:
+  - stg/ecr.yaml
+  - stg/logging.yaml
+  - stg/network.yaml
+
+parameters:
+  ECSServiceSecurityGroupName: "{{ base_name }}-{{ environment }}-ecs-service-security-group"
+  ECSClusterName: "{{ base_name }}-{{ environment }}-ecs-cluster"
+  ContainerName: "{{ base_name }}-{{ environment }}-container"
+  TaskDefinitionFamilyName: "{{ base_name }}-{{ environment }}-ecs-task-definition"
+  ECSTaskRoleName: "{{ base_name }}-{{ environment }}-ecs-task-role"
+  ECSTaskExecutionRoleName: "{{ base_name }}-{{ environment }}-ecs-task-execution-role"
+  ECSServiceName: "{{ base_name }}-{{ environment }}-ecs-service"
+  {% if var.image_tag | default(False) %}
+  ImageTag: "{{ var.image_tag }}"
+  {% else %}
+  ImageTag: latest
+  {% endif %}
+  
+  VPCID: !stack_output_external cdl-d2d-dev-vpc-stack::vpc
+  SubnetIDs:
+    - !stack_output_external cdl-d2d-dev-defaultsubnet-stack::defaultsubnet2a
+    - !stack_output_external cdl-d2d-dev-defaultsubnet-stack::defaultsubnet2b
+    - !stack_output_external cdl-d2d-dev-defaultsubnet-stack::defaultsubnet2c
+
+  LoadBalancerSecurityGroupID: !stack_output stg/network.yaml::LoadBalancerSecurityGroupID
+  TargetGroupARN: !stack_output stg/network.yaml::TargetGroupARN
+
+  RepositoryURI: !stack_output stg/ecr.yaml::RepositoryURI
+  RepositoryARN: !stack_output stg/ecr.yaml::RepositoryARN
+  
+  LogGroupID: !stack_output stg/logging.yaml::LogGroupID
+  LogGroupArn: !stack_output stg/logging.yaml::LogGroupArn
+
+  ApplicationPort: "8000"
+  
+  FlaskEnvironment: development
+  LogLevel: DEBUG
+
+  DatabaseCredentialsSecretName: /d2d/zephir/stg/database/ro
+  DatabaseSecurityGroupID: sg-09025405ae7b4a5ad
