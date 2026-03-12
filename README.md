@@ -1,9 +1,12 @@
 # zephir_api2
- 
-![CI](https://github.com/cdlib/zephir-api2/actions/workflows/ci.yml/badge.svg)
 
 The Zephir Item API provides item-level MARC metadata records for all items submitted to HathiTrust.
+
 See [API.md](API.md) for full endpoint documentation.
+
+## Workflow
+
+This repository uses [GitHub flow](https://docs.github.com/en/get-started/using-github/github-flow). The `main` branch is always assumed to be tested and ready for deployment to production. Ensure all changes are adequately tested _before_ merging into `main`.
 
 ## Getting Started
 

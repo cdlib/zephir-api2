@@ -83,6 +83,14 @@ Resources:
               awslogs-group: !Ref LogGroupID
               awslogs-region: !Ref AWS::Region
               awslogs-stream-prefix: !Ref ContainerName
+          HealthCheck:
+            Command:
+              - "CMD-SHELL"
+              - "/app/healthcheck.sh"
+            Interval: 30
+            Timeout: 5
+            StartPeriod: 10
+            Retries: 3
           PortMappings:
             - AppProtocol: http
               ContainerPort: !Ref ApplicationPort
