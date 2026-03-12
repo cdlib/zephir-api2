@@ -85,8 +85,11 @@ Resources:
               awslogs-stream-prefix: !Ref ContainerName
           HealthCheck:
             Command:
-              - "CMD-SHELL"
-              - "/app/healthcheck.sh"
+              - "CMD"
+              - "uv"
+              - "run"
+              - "python"
+              - "scripts/healthcheck.py"
             Interval: 30
             Timeout: 5
             StartPeriod: 10

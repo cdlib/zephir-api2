@@ -62,6 +62,6 @@ COPY --chown=app:app . .
 USER app
 
 HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
-    CMD /app/healthcheck.sh
+    CMD ["uv", "run", "python", "scripts/healthcheck.py"]
 
 CMD ["uv", "run", "python", "-m", "gunicorn", "-c", "gunicorn_config.py"]
