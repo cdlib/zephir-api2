@@ -4,9 +4,7 @@ permissions:
   contents: read
 
 on:
-  push:
-    branches:
-      - '**'
+  pull_request:
 
 jobs:
   CodeAnalysis:
@@ -28,27 +26,22 @@ jobs:
         uv sync --frozen
 
     - name: Check for outdated dependencies
-      if: env.skip-job != 'true'
       run: |
         uv tree --outdated
 
     - name: Run tests with coverage in latest stable 3.x
       run: |
         uv run pytest --cov=app --cov-report=term-missing
-      continue-on-error: false  
 
     - name: Run Bandit for security analysis
       run: |
         uv run bandit -r app
-      continue-on-error: false  
 
     - name: Run Ruff for linting
       run: |
         uv run ruff check .
-      continue-on-error: false 
 
     - name: Run Vulture for dead code analysis
       run: |
         uv run vulture . --min-confidence 70 --exclude .venv
-      continue-on-error: false 
 

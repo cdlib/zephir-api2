@@ -5,6 +5,11 @@ ARG IMAGE_TAG=3.13-slim-trixie
 #
 FROM python:${IMAGE_TAG} AS deps
 
+# Apply latest security patches
+RUN apt-get update && \
+    apt-get upgrade -y && \
+    rm -rf /var/lib/apt/lists/*
+
 # Copy uv binary for dependency management
 COPY --from=ghcr.io/astral-sh/uv:0.8.4 /uv /usr/local/bin/uv
 
@@ -39,6 +44,11 @@ CMD ["uv", "run", "pytest", "tests"]
 #
 FROM python:${IMAGE_TAG} AS production
 
+# Apply latest security patches
+RUN apt-get update && \
+    apt-get upgrade -y && \
+    rm -rf /var/lib/apt/lists/*
+
 # Copy uv binary for runtime
 COPY --from=ghcr.io/astral-sh/uv:0.8.4 /uv /usr/local/bin/uv
 
@@ -60,5 +70,8 @@ COPY --chown=app:app . .
 
 # Switch to the unprivileged user before starting the process
 USER app
+
+HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
+    CMD ["uv", "run", "python", "scripts/healthcheck.py"]
 
 CMD ["uv", "run", "python", "-m", "gunicorn", "-c", "gunicorn_config.py"]

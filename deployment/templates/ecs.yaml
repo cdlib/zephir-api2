@@ -83,6 +83,17 @@ Resources:
               awslogs-group: !Ref LogGroupID
               awslogs-region: !Ref AWS::Region
               awslogs-stream-prefix: !Ref ContainerName
+          HealthCheck:
+            Command:
+              - "CMD"
+              - "uv"
+              - "run"
+              - "python"
+              - "scripts/healthcheck.py"
+            Interval: 30
+            Timeout: 5
+            StartPeriod: 10
+            Retries: 3
           PortMappings:
             - AppProtocol: http
               ContainerPort: !Ref ApplicationPort

@@ -1,9 +1,12 @@
 # zephir_api2
- 
-![CI](https://github.com/cdlib/zephir-api2/actions/workflows/ci.yml/badge.svg)
 
 The Zephir Item API provides item-level MARC metadata records for all items submitted to HathiTrust.
+
 See [API.md](API.md) for full endpoint documentation.
+
+## Workflow
+
+This repository uses [GitHub flow](https://docs.github.com/en/get-started/using-github/github-flow). The `main` branch is always assumed to be tested and ready for deployment to production. Ensure all changes are adequately tested _before_ merging into `main`.
 
 ## Getting Started
 
@@ -17,23 +20,33 @@ brew install uv
 
 ### Local Development
 
-**Install dependencies:**
+1. Install dependencies
 
-```sh
-uv sync
-```
+    ```sh
+    uv sync
+    ```
 
-**Set required environment variables** (see [Database configuration](#database-configuration) below), then **run the app:**
+2. Install git hooks
 
-Copy `env.template` to `.env` and update the `DATABASE_URI` variable.
+    ```sh
+    git config core.hooksPath .githooks
+    ```
 
-```sh
-uv run python -m gunicorn -c gunicorn_config.py
-```
+    This enables the pre-commit hook that runs ruff and vulture before each commit.
 
-The API will be available at `http://localhost:8000/api/`.
+3. Set required environment variables
 
-**Run tests:**
+    Copy `env.template` to `.env` and update the `DATABASE_URI` variable. See [Database configuration](#database-configuration) below.
+
+4. Run the app
+
+    ```sh
+    uv run python -m gunicorn -c gunicorn_config.py
+    ```
+
+    The API will be available at `http://localhost:8000/api/`.
+
+### Running tests
 
 ```sh
 uv run pytest tests
@@ -41,7 +54,7 @@ uv run pytest tests
 
 Tests use a bundled SQLite fixture (`tests/test_zephir_api/`) and do not require a live database connection.
 
-**Run linting and analysis tools:**
+### Linting, etc.
 
 ```sh
 uv run ruff check .
