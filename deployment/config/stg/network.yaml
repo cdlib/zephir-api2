@@ -2,6 +2,8 @@ template:
   path: network.yaml.j2
   type: file
 
+# stg shares the dev AWS account and VPC. All resource references below intentionally
+# point to dev-account infrastructure and SSM parameters.
 sceptre_user_data:
   load_balancer_security_group_sources:
     - !ssm /d2d/dev/ucop-vpn-prefix-list-id

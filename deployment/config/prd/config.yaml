@@ -1,9 +1,8 @@
-# profile: cdl-d2d-prd
+profile: cdl-d2d-prd
 
 sceptre_user_data:
   environment: prd
   resource_name_prefix: "{{ sceptre_user_data.program }}-{{ sceptre_user_data.service }}-{{ sceptre_user_data.subservice }}-prd"
-  port: "8000"
   url_authority: "{{ sceptre_user_data.program }}-{{ sceptre_user_data.service }}-{{ sceptre_user_data.subservice }}.d2dprd.cdlib.net"
 
 stack_tags:

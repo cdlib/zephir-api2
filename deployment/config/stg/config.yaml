@@ -6,7 +6,6 @@ cloudformation_service_role: arn:aws:iam::445017934155:role/sceptre/d2d-zephir-a
 sceptre_user_data:
   environment: stg
   resource_name_prefix: "{{ sceptre_user_data.program }}-{{ sceptre_user_data.service }}-{{ sceptre_user_data.subservice }}-stg"
-  port: "8000"
   url_authority: "{{ sceptre_user_data.program }}-{{ sceptre_user_data.service }}-{{ sceptre_user_data.subservice }}-stg.d2ddev.cdlib.net"
 
 stack_tags:

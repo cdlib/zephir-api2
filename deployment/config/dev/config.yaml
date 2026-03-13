@@ -3,7 +3,6 @@ profile: cdl-d2d-dev
 sceptre_user_data:
   environment: dev
   resource_name_prefix: "{{ sceptre_user_data.program }}-{{ sceptre_user_data.service }}-{{ sceptre_user_data.subservice }}-dev"
-  port: "8000"
   url_authority: "{{ sceptre_user_data.program }}-{{ sceptre_user_data.service }}-{{ sceptre_user_data.subservice }}-dev.d2ddev.cdlib.net"
 
 stack_tags:

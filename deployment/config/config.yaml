@@ -9,6 +9,7 @@ sceptre_user_data:
   service: zephir
   subservice: api
   repository: https://github.com/cdlib/zephir-api2.git
+  port: "8000"
 
 stack_tags:
   program: !stack_attr sceptre_user_data.program

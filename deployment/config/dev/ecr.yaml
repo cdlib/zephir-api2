@@ -2,4 +2,5 @@ template:
   path: ecr.yaml.j2
   type: file
 
+# Comment out to create once, ignore afterwards:
 ignore: True
