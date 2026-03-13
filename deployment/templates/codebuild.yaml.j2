@@ -46,7 +46,9 @@ Resources:
             Version: 2012-10-17
             Statement:
               - Effect: Allow
-                Action: codestar-connections:UseConnection
+                Action:
+                  - codeconnections:GetConnectionToken
+                  - codeconnections:GetConnection
                 Resource: !Ref GitHubConnectionArn
 
   CodeBuildProject:
