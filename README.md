@@ -115,36 +115,11 @@ The job configuration lives in [`buildspec.yml`](buildspec.yml).
 
 ### First-time setup
 
-The CodeBuild infrastructure is managed by Sceptre. Deploying it requires a one-time manual step to authorize the AWS–GitHub connection.
-
-
-1. **Deploy the CodeBuild stack**
-
-    ```sh
-    export AWS_PROFILE=cdl-d2d-dev
-    aws sso login --profile cdl-d2d-dev
-    uv run sceptre launch dev/codebuild.yaml
-    ```
-
-2. **Activate the GitHub connection** (one-time, manual)
-
-    The `AWS::CodeStarConnections::Connection` resource is created in a `PENDING_HANDSHAKE` state and must be authorized before CodeBuild can access GitHub.
-
-    - Open the [AWS Console → Developer Tools → Connections](https://us-west-2.console.aws.amazon.com/codesuite/settings/connections) in the `cdl-d2d-dev` account (`us-west-2`)
-    - Find the connection named `d2d-zephir-api-api-dev-github`
-    - Click **Update pending connection** and complete the GitHub OAuth flow
-
-    Once authorized the connection status changes to **Available** and the CodeBuild webhook is live.
-
-3. **Validate**
-
-    Open a pull request. The CodeBuild project `d2d-zephir-api-api-dev-ci` should trigger automatically and post a check status on the PR.
+The CodeBuild project is managed by Sceptre. Note that the GitHub connection is created and activated manually before deploying.
 
 ### Test results
 
-Build status is automatically reported to GitHub.
-
-Test results are published to the CodeBuild **Test reports** panel (JUnit XML).
+Build status is automatically reported to GitHub on every PR. Test results are published to the CodeBuild **Test reports** panel (JUnit XML).
 
 ## Deploying to AWS
 

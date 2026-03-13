@@ -3,3 +3,8 @@ template:
   type: file
 
 # No dependencies on other stacks; CodeBuild is independent of ECS/network/etc.
+#
+# GitHubConnectionArn must be created and activated manually before deploying.
+# See the "CI" section in README.md for instructions.
+parameters:
+  GitHubConnectionArn: arn:aws:codeconnections:us-west-2:445017934155:connection/6af1f14e-4157-4e78-a1bd-73f160a9c4c5

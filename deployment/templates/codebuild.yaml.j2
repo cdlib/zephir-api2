@@ -1,13 +1,12 @@
 AWSTemplateFormatVersion: 2010-09-09
 Description: CodeBuild CI project for Zephir API
 
-Resources:
-  GitHubConnection:
-    Type: AWS::CodeStarConnections::Connection
-    Properties:
-      ConnectionName: "{{ sceptre_user_data.resource_name_prefix }}-github"
-      ProviderType: GitHub
+Parameters:
+  GitHubConnectionArn:
+    Type: String
+    Description: ARN of the manually-created and activated CodeStar connection to GitHub
 
+Resources:
   CodeBuildServiceRole:
     Type: AWS::IAM::Role
     Properties:
@@ -48,7 +47,7 @@ Resources:
             Statement:
               - Effect: Allow
                 Action: codestar-connections:UseConnection
-                Resource: !Ref GitHubConnection
+                Resource: !Ref GitHubConnectionArn
 
   CodeBuildProject:
     Type: AWS::CodeBuild::Project
@@ -64,7 +63,7 @@ Resources:
         ReportBuildStatus: true
         Auth:
           Type: OAUTH
-          Resource: !Ref GitHubConnection
+          Resource: !Ref GitHubConnectionArn
       Environment:
         Type: LINUX_CONTAINER
         Image: aws/codebuild/standard:7.0
@@ -78,8 +77,6 @@ Resources:
         Type: NO_ARTIFACTS
 
 Outputs:
-  ConnectionArn:
-    Value: !Ref GitHubConnection
   ProjectName:
     Value: !Ref CodeBuildProject
   ProjectArn:
