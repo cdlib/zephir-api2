@@ -107,7 +107,19 @@ The app resolves the database connection from environment variables in priority 
 | `DATABASE_CREDENTIALS_SECRET_NAME` + AWS vars | Pull credentials from AWS Secrets Manager |
 | `DB_USERNAME` + `DB_PASSWORD` + `DB_HOST` + `DB_DATABASE` | Individual credential env vars |
 
----
+## CI (Continuous Integration)
+
+CI runs on AWS CodeBuild in the `cdl-d2d-dev` account. Every pull request triggers a build that runs tests, linting, and security checks, and reports a check status with a link to the build log back to GitHub.
+
+The job configuration lives in [`buildspec.yml`](buildspec.yml).
+
+### First-time setup
+
+The CodeBuild project is managed by Sceptre. Note that the GitHub connection is created and activated manually before deploying.
+
+### Test results
+
+Build status is automatically reported to GitHub on every PR. Test results are published to the CodeBuild **Test reports** panel (JUnit XML).
 
 ## Deploying to AWS
 

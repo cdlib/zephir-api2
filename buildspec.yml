@@ -1,0 +1,25 @@
+version: 0.2
+
+phases:
+  install:
+    commands:
+      - pip install uv
+
+  pre_build:
+    commands:
+      - uv sync --frozen
+
+  build:
+    commands:
+      - uv run python --version
+      - uv tree --outdated
+      - uv run pytest --cov=app --cov-report=term-missing --junitxml=pytest-report.xml
+      - uv run bandit -r app
+      - uv run ruff check .
+      - uv run vulture . --min-confidence 70 --exclude .venv
+
+reports:
+  pytest-reports:
+    files:
+      - pytest-report.xml
+    file-format: JUNITXML
