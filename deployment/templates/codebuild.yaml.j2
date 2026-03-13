@@ -1,0 +1,86 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: CodeBuild CI project for Zephir API
+
+Resources:
+  GitHubConnection:
+    Type: AWS::CodeStarConnections::Connection
+    Properties:
+      ConnectionName: "{{ sceptre_user_data.resource_name_prefix }}-github"
+      ProviderType: GitHub
+
+  CodeBuildServiceRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: "{{ sceptre_user_data.resource_name_prefix }}-codebuild-service-role"
+      AssumeRolePolicyDocument:
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: codebuild.amazonaws.com
+            Action: sts:AssumeRole
+      Policies:
+        - PolicyName: CloudWatch-Logs
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - Effect: Allow
+                Action:
+                  - logs:CreateLogGroup
+                  - logs:CreateLogStream
+                  - logs:PutLogEvents
+                Resource:
+                  - !Sub "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/codebuild/{{ sceptre_user_data.resource_name_prefix }}-ci"
+                  - !Sub "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/codebuild/{{ sceptre_user_data.resource_name_prefix }}-ci:*"
+        - PolicyName: CodeBuild-Reports
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - Effect: Allow
+                Action:
+                  - codebuild:CreateReportGroup
+                  - codebuild:CreateReport
+                  - codebuild:UpdateReport
+                  - codebuild:BatchPutTestCases
+                Resource: !Sub "arn:aws:codebuild:${AWS::Region}:${AWS::AccountId}:report-group/{{ sceptre_user_data.resource_name_prefix }}-ci-*"
+        - PolicyName: GitHub-Connection
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - Effect: Allow
+                Action: codestar-connections:UseConnection
+                Resource: !Ref GitHubConnection
+
+  CodeBuildProject:
+    Type: AWS::CodeBuild::Project
+    Properties:
+      Name: "{{ sceptre_user_data.resource_name_prefix }}-ci"
+      Description: "CI for Zephir API"
+      ServiceRole: !GetAtt CodeBuildServiceRole.Arn
+      Source:
+        Type: GITHUB
+        Location: "{{ sceptre_user_data.repository }}"
+        BuildSpec: buildspec.yml
+        GitCloneDepth: 1
+        ReportBuildStatus: true
+        Auth:
+          Type: OAUTH
+          Resource: !Ref GitHubConnection
+      Environment:
+        Type: LINUX_CONTAINER
+        Image: aws/codebuild/standard:7.0
+        ComputeType: BUILD_GENERAL1_SMALL
+      Triggers:
+        Webhook: true
+        FilterGroups:
+          - - Type: EVENT
+              Pattern: PULL_REQUEST_CREATED,PULL_REQUEST_UPDATED,PULL_REQUEST_REOPENED
+      Artifacts:
+        Type: NO_ARTIFACTS
+
+Outputs:
+  ConnectionArn:
+    Value: !Ref GitHubConnection
+  ProjectName:
+    Value: !Ref CodeBuildProject
+  ProjectArn:
+    Value: !GetAtt CodeBuildProject.Arn

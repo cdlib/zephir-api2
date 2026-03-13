@@ -1,0 +1,5 @@
+template:
+  path: codebuild.yaml.j2
+  type: file
+
+# No dependencies on other stacks; CodeBuild is independent of ECS/network/etc.
