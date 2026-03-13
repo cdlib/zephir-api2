@@ -1,6 +1,6 @@
 template:
-  path: ecr.yaml
+  path: ecr.yaml.j2
   type: file
 
-parameters:
-  RepositoryName: "{{ base_name }}-{{ environment }}"
+# Comment out to create once, ignore afterwards:
+ignore: True

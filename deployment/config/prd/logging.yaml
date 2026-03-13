@@ -1,6 +1,3 @@
 template:
-  path: logging.yaml
+  path: logging.yaml.j2
   type: file
-
-parameters:
-  LogGroupName: "{{ base_name }}-{{ environment }}-log-group"

@@ -1,25 +1,12 @@
 AWSTemplateFormatVersion: 2010-09-09
 Description: Service Stack for Zephir API
 
-
 Parameters:
-  ECSServiceSecurityGroupName:
-    Type: String
-  ECSClusterName:
-    Type: String
   ContainerName:
-    Type: String
-  TaskDefinitionFamilyName:
-    Type: String
-  ECSTaskRoleName:
-    Type: String
-  ECSTaskExecutionRoleName:
-    Type: String
-  ECSServiceName:
     Type: String
   ImageTag:
     Type: String
-  
+
   VPCID:
     Type: AWS::EC2::VPC::Id
   SubnetIDs:
@@ -57,7 +44,7 @@ Resources:
     Type: AWS::EC2::SecurityGroup
     Properties:
       GroupDescription: Security group for ECS tasks
-      GroupName: !Ref ECSServiceSecurityGroupName
+      GroupName: "{{ sceptre_user_data.resource_name_prefix }}-ecs-service-security-group"
       SecurityGroupIngress:
         - SourceSecurityGroupId: !Ref LoadBalancerSecurityGroupID
           IpProtocol: tcp
@@ -68,7 +55,7 @@ Resources:
   ECSCluster:
     Type: AWS::ECS::Cluster
     Properties:
-      ClusterName: !Ref ECSClusterName
+      ClusterName: "{{ sceptre_user_data.resource_name_prefix }}-ecs-cluster"
 
   TaskDefinition:
     Type: AWS::ECS::TaskDefinition
@@ -108,7 +95,7 @@ Resources:
               Value: !Ref ApplicationPort
             - Name: DATABASE_CREDENTIALS_SECRET_NAME
               Value: !Ref DatabaseCredentialsSecretName
-          Command: 
+          Command:
             - "uv"
             - "run"
             - "python"
@@ -119,16 +106,16 @@ Resources:
       Cpu: "256"
       TaskRoleArn: !Ref ECSTaskRole
       ExecutionRoleArn: !Ref ECSTaskExecutionRole
-      Family: !Ref TaskDefinitionFamilyName
+      Family: "{{ sceptre_user_data.resource_name_prefix }}-ecs-task-definition"
       Memory: "512"
       NetworkMode: awsvpc
-      RequiresCompatibilities: 
+      RequiresCompatibilities:
         - FARGATE
 
   ECSTaskRole:
     Type: AWS::IAM::Role
     Properties:
-      RoleName: !Ref ECSTaskRoleName
+      RoleName: "{{ sceptre_user_data.resource_name_prefix }}-ecs-task-role"
       AssumeRolePolicyDocument:
         Statement:
           - Effect: Allow
@@ -149,15 +136,15 @@ Resources:
   ECSTaskExecutionRole:
     Type: AWS::IAM::Role
     Properties:
-      RoleName: !Ref ECSTaskExecutionRoleName
+      RoleName: "{{ sceptre_user_data.resource_name_prefix }}-ecs-task-execution-role"
       AssumeRolePolicyDocument:
         Statement:
           - Effect: Allow
-            Principal: 
+            Principal:
               Service: ecs-tasks.amazonaws.com
             Action: sts:AssumeRole
       Policies:
-        - PolicyName: ECR-Pull
+        - PolicyName: "{{ sceptre_user_data.resource_name_prefix }}-execution-role-policy"
           PolicyDocument:
             Version: 2012-10-17
             Statement:
@@ -170,10 +157,6 @@ Resources:
               - Effect: Allow
                 Action: ecr:GetAuthorizationToken
                 Resource: '*'
-        - PolicyName: LogGroup-Log
-          PolicyDocument:
-            Version: 2012-10-17
-            Statement:
               - Effect: Allow
                 Action:
                   - logs:CreateLogStream
@@ -192,11 +175,11 @@ Resources:
       NetworkConfiguration:
         AwsvpcConfiguration:
           AssignPublicIp: ENABLED
-          SecurityGroups: 
+          SecurityGroups:
             - !GetAtt ECSServiceSecurityGroup.GroupId
             - !Ref DatabaseSecurityGroupID
           Subnets: !Ref SubnetIDs
-      ServiceName: !Ref ECSServiceName
+      ServiceName: "{{ sceptre_user_data.resource_name_prefix }}-ecs-service"
       TaskDefinition: !Ref TaskDefinition
       LoadBalancers:
         - ContainerName: !Ref ContainerName

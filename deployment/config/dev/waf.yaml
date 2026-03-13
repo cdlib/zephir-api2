@@ -1,11 +1,9 @@
 template:
-  path: waf.yaml
+  path: waf.yaml.j2
   type: file
 
 dependencies:
-  - dev/network.yaml
+  - "{{ sceptre_user_data.environment }}/network.yaml"
 
 parameters:
-  WebACLName: "{{ base_name }}-{{ environment }}-waf-webacl"
-  WebACLMetricName: "{{ base_name }}-{{ environment }}-waf-webacl-metric"
-  LoadBalancerArn: !stack_output dev/network.yaml::LoadBalancerARN
+  LoadBalancerArn: !stack_output "{{ sceptre_user_data.environment }}/network.yaml::LoadBalancerARN"

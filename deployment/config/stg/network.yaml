@@ -2,23 +2,21 @@ template:
   path: network.yaml.j2
   type: file
 
-parameters:
-  LoadBalancerSecurityGroupName: "{{ base_name }}-{{ environment }}-load-balancer-security-group"
-  LoadBalancerName: "{{ base_name }}-{{ environment }}-load-balancer"
-  TargetGroupName: "{{ base_name }}-{{ environment }}-target-group"
+# stg shares the dev AWS account and VPC. All resource references below intentionally
+# point to dev-account infrastructure and SSM parameters.
+sceptre_user_data:
+  load_balancer_security_group_sources:
+    - !ssm /d2d/dev/ucop-vpn-prefix-list-id
+    - !ssm /d2d/dev/cdl-eip-prefix-list-id
 
+parameters:
   VPCID: !stack_output_external cdl-d2d-dev-vpc-stack::vpc
   SubnetIDs:
     - !stack_output_external cdl-d2d-dev-defaultsubnet-stack::defaultsubnet2a
     - !stack_output_external cdl-d2d-dev-defaultsubnet-stack::defaultsubnet2b
     - !stack_output_external cdl-d2d-dev-defaultsubnet-stack::defaultsubnet2c
   LoadBalancerSecurityGroupSources: !stack_attr sceptre_user_data.load_balancer_security_group_sources
-    
-  Route53ZoneID: !ssm /d2d/dev/route53-hosted-zone-id
-  Domain: d2d-zephir-api-stg.d2ddev.cdlib.net
-  ApplicationPort: "8000"
 
-sceptre_user_data:
-  load_balancer_security_group_sources:
-    - !ssm /d2d/dev/ucop-vpn-prefix-list-id
-    - !ssm /d2d/dev/cdl-eip-prefix-list-id
+  Route53ZoneID: !ssm /d2d/dev/route53-hosted-zone-id
+  Domain: "{{ sceptre_user_data.url_authority }}"
+  ApplicationPort: "{{ sceptre_user_data.port }}"

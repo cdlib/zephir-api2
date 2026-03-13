@@ -1,24 +1,16 @@
 AWSTemplateFormatVersion: 2010-09-09
 Description: Log Group for Zephir API
 
-
-Parameters:
-  LogGroupName:
-    Type: String
-
-
 Resources:
   LogGroup:
     Type: AWS::Logs::LogGroup
     Properties:
-      LogGroupName: !Ref LogGroupName
+      LogGroupName: "{{ sceptre_user_data.resource_name_prefix }}-log-group"
       RetentionInDays: 14
     UpdateReplacePolicy: Retain
-
 
 Outputs:
   LogGroupID:
     Value: !Ref LogGroup
-
   LogGroupArn:
     Value: !GetAtt LogGroup.Arn

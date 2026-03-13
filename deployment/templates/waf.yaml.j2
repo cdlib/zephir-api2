@@ -1,26 +1,21 @@
 AWSTemplateFormatVersion: 2010-09-09
 Description: WAF for Zephir API
 
-
 Parameters:
-  WebACLName:
-    Type: String
-  WebACLMetricName:
-    Type: String
   LoadBalancerArn:
     Type: String
 
 Resources:
   WebACL:
     Type: AWS::WAFv2::WebACL
-    Properties: 
-      Name: !Ref WebACLName
+    Properties:
+      Name: "{{ sceptre_user_data.resource_name_prefix }}-waf-webacl"
       DefaultAction:
         Allow: {}
       Scope: REGIONAL
       VisibilityConfig:
         CloudWatchMetricsEnabled: true
-        MetricName: !Ref WebACLMetricName
+        MetricName: "{{ sceptre_user_data.resource_name_prefix }}-waf-webacl-metric"
         SampledRequestsEnabled: true
       Rules:
         - Name: AWS-AWSManagedRulesAmazonIpReputationList
